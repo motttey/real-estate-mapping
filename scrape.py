@@ -17,6 +17,13 @@ def scrape_towns():
         popular_town_array.append(town_text)
     return popular_town_array
 
+def get_real_estate_list(town_name_list):
+    for town_name in town_name_list:
+        print("https://suumo.jp/library/search/ichiran.html?qr="+town_name.encode('utf-8')+"&qk=3")
+        html = urllib2.urlopen("https://suumo.jp/library/search/ichiran.html?qr="+town_name.encode('utf-8')+"&qk=3")
+        soup = BeautifulSoup(html, features="html.parser")
+
 if __name__ == '__main__':
     popular_town_array = scrape_towns()
     print(popular_town_array)
+    get_real_estate_list(popular_town_array)
