@@ -1,7 +1,10 @@
+# -*- coding: utf-8 -*-
 import urllib2
 from urlparse import urlparse
 import requests
+import time
 from bs4 import BeautifulSoup
+from pygeocoder import Geocoder
 
 def scrape_towns():
     html = urllib2.urlopen("https://suumo.jp/edit/sumi_machi/2018/kanto/")
@@ -36,8 +39,15 @@ def get_real_estate_list(town_name_list):
         all_estate_name_list[town_name.encode('utf-8')] = estate_name_list
     return all_estate_name_list
 
+def get_geocode_from_estate_name(estate_name_list):
+    for estate_name in estate_name_list:
+        time.sleep(2)
+        results = Geocoder.geocode(estate_name)
+        print(results[0].coordinates)
+
 if __name__ == '__main__':
     popular_town_array = scrape_towns()
     print(popular_town_array)
     all_estate_name_list = get_real_estate_list(popular_town_array)
     print(all_estate_name_list["横浜"])
+    get_geocode_from_estate_name(all_estate_name_list["横浜"])
