@@ -4,6 +4,7 @@ from urlparse import urlparse
 import requests
 import time
 import sys
+import json
 from bs4 import BeautifulSoup
 from pygeocoder import Geocoder
 
@@ -41,13 +42,18 @@ def get_real_estate_list(town_name_list):
     return all_estate_name_list
 
 def get_geocode_from_estate_name(estate_name_list, api_key):
-    results = Geocoder(api_key).geocode(estate_name_list[0])
-    print(results[0].coordinates)
+    for estate_name in estate_name_list:
+        time.sleep(1)
+        estate_detail = {}
+        estate_detail["name"] = estate_name
 
-    #for estate_name in estate_name_list:
-    #    time.sleep(2)
-    #    results = Geocoder.geocode(estate_name)
-    #    print(results[0].coordinates)
+        results = Geocoder(api_key).geocode(estate_name)
+        estate_detail["lat"] = results[0].geometry.location.lat();
+        estate_detail["lng"] = results[0].geometry.location.lng();
+
+        print(estate_detail)
+        estate_detail_list.append(estate_detail)
+    return estate_detail_list;
 
 if __name__ == '__main__':
     api_key = sys.argv[1]
@@ -57,4 +63,6 @@ if __name__ == '__main__':
     all_estate_name_list = get_real_estate_list(popular_town_array)
     print(all_estate_name_list["横浜"])
 
-    get_geocode_from_estate_name(all_estate_name_list["横浜"], api_key)
+    estate_detail_list = get_geocode_from_estate_name(all_estate_name_list["横浜"], api_key)
+    f = codecs.open("output.json", "w", "utf-8")
+    json.dump(estate_detail_list, f, ensure_ascii=False)
