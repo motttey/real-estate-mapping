@@ -1,0 +1,3 @@
+[submodule "JapanCityGeoJson"]
+	path = JapanCityGeoJson
+	url = https://github.com/niiyz/JapanCityGeoJson

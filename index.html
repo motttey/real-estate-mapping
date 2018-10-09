@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <div id="main">
+      <svg id="map"></svg>
+    </div>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+    <script type="text/javascript">
+      var width = 1500;
+      var height = 1500;
+      $.get("./14.json", function(data){
+      	var data_parsed = $.parseJSON(data);
+        var projection = d3.geoMercator()
+                    .center([ 139.38, 35.26 ])
+                    .translate([width/2, height/2])
+                    .scale(64000);
+
+        var geoPath = d3.geoPath().projection(projection);
+        var svg = d3.select("#map")
+          .attr("width",width)
+          .attr("height",height);
+
+        var map = svg.selectAll("path").data(data_parsed.features)
+          .enter()
+          .append("path")
+            .attr("d", geoPath)
+            .style("stroke", "#5EAFC6")
+            .style("stroke-width", 1)
+            .style("fill", "#ffffff");
+
+        // ハマスタ
+        var coordinate = projection([139.6400721, 35.4433109]);
+
+        svg.append('g')
+                .append('circle')
+                .attr('cx', coordinate[0])
+                .attr('cy', coordinate[1])
+                .attr('r', 2)
+                .attr('stroke', 'red')
+                .attr('fill', 'red');
+      });
+
+    </script>
+  </body>
+</html>
