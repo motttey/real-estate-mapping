@@ -8,9 +8,11 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
     <script type="text/javascript">
-      var width = 1500;
-      var height = 1500;
-      $.get("./14.json", function(data){
+    
+      const width = 1500;
+      const height = 1500;
+
+      $.get("./JapanCityGeoJson/geojson/prefectures/14.json", function(data){
       	var data_parsed = $.parseJSON(data);
         var projection = d3.geoMercator()
                     .center([ 139.38, 35.26 ])
@@ -31,12 +33,33 @@
             .style("fill", "#ffffff");
 
         // ハマスタ
-        var coordinate = projection([139.6400721, 35.4433109]);
+        const coordinate = [
+          [139.6400721, 35.4433109],
+          [139.5823925, 35.4139298],
+          [139.6221193, 35.457653],
+          [139.6844014, 35.5292637],
+          [139.6221193, 35.457653],
+          [139.4222457, 35.3175545],
+        ];
 
-        svg.append('g')
+        var projected_coordinate = [];
+        coordinate.forEach(function(d){
+          projected_coordinate.push(projection(d));
+        });
+
+        var circles_g = svg.append('g')
+                .attr('id', 'circles');
+
+        var circles = circles_g.selectAll("circle")
+                .data(projected_coordinate)
+                .enter()
                 .append('circle')
-                .attr('cx', coordinate[0])
-                .attr('cy', coordinate[1])
+                .attr('cx', function(d){
+                  return d[0];
+                })
+                .attr('cy', function(d){
+                  return d[1];
+                })
                 .attr('r', 2)
                 .attr('stroke', 'red')
                 .attr('fill', 'red');
