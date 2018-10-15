@@ -18,48 +18,65 @@ def scrape_towns():
     for town in town_list:
         town_text = town.text.replace("\t", "").replace("\r", "").replace("\n", "")
         popular_town_array.append(town_text)
-
+    """
     town_list2 = soup.find_all('div', {'class' :'linklist_subitem-last'})
     for town in town_list:
         town_text = town.text.replace("\t", "").replace("\r", "").replace("\n", "")
         popular_town_array.append(town_text)
+    """
     return popular_town_array
 
 def get_real_estate_list(town_name_list):
     all_estate_name_list = {}
+    init_page = 1
     for town_name in town_name_list:
-        print("https://www.sumai-surfin.com/search/result/?prefecture_id=&keyword="+urllib.request.quote(town_name.encode('utf-8')))
-        response = urllib.request.urlopen("https://www.sumai-surfin.com/search/result/?prefecture_id=&keyword="+urllib.request.quote(town_name.encode('utf-8')))
+        response = urllib.request.urlopen("https://www.sumai-surfin.com/search/result/?p="+str(init_page)+"&keyword="+urllib.request.quote(town_name.encode('utf-8')))
         # req.add_header('User-Agent', User_Agent)
         soup = BeautifulSoup(response, features="html.parser")
 
         estate_name_list = []
-        estate_list = soup.find_all('div', {'class' :'p-section__ttl-line'})
-        for estate in estate_list:
-            estate_name = estate.find('div').find('a').text
-            estate_name_list.append(estate_name)
-        all_estate_name_list[town_name] = estate_name_list
+        estate_count_str = soup.find('p', {'class' :'pager-count'}).find('span', {'class' :'pager-decimal'}).text
+        estate_count = int(estate_count_str)
+        page_max = int(estate_count / 10)
+        print(estate_count)
+
+        for page_index in range(init_page, page_max, 1):
+            time.sleep(1)
+            print(page_index)
+            print("https://www.sumai-surfin.com/search/result/?p="+str(page_index)+"&keyword="+urllib.request.quote(town_name.encode('utf-8')))
+            new_request_response = urllib.request.urlopen("https://www.sumai-surfin.com/search/result/?p="+str(page_index)+"&keyword="+urllib.request.quote(town_name.encode('utf-8')))
+            # req.add_header('User-Agent', User_Agent)
+            soup_inner = BeautifulSoup(new_request_response, features="html.parser")
+
+            estate_list = soup_inner.find_all('div', {'class' :'p-section__ttl-line'})
+            for estate in estate_list:
+                estate_name = estate.find('div').find('a').text
+                estate_name_list.append(estate_name)
+            all_estate_name_list[town_name] = estate_name_list
     return all_estate_name_list
 
 def get_geocode_from_estate_name(all_estate_name_list, api_key):
     for key, estate_name_list in all_estate_name_list.items():
         estate_detail_list = []
         for estate_name in estate_name_list:
-            time.sleep(6)
+            time.sleep(10)
             estate_detail = {}
             estate_detail["name"] = estate_name
 
             request = urllib.request.Request("https://www.geocoding.jp/api/?q="+urllib.request.quote(estate_name.encode('utf-8')))
-            with urllib.request.urlopen(request) as response:
-                result_xml = response.read()
-                parse_result = xmltodict.parse(result_xml)
-                result = parse_result["result"]
-                print(parse_result["result"])
-                if "coordinate" in result:
-                    estate_detail["lat"] = result["coordinate"]["lat"];
-                    estate_detail["lng"] = result["coordinate"]["lng"];
-                    print(estate_detail)
-                    estate_detail_list.append(estate_detail)
+            try:
+                with urllib.request.urlopen(request) as response:
+                    result_xml = response.read()
+                    parse_result = xmltodict.parse(result_xml)
+                    result = parse_result["result"]
+                    print(parse_result["result"])
+                    if "coordinate" in result:
+                        estate_detail["lat"] = result["coordinate"]["lat"];
+                        estate_detail["lng"] = result["coordinate"]["lng"];
+                        print(estate_detail)
+                        estate_detail_list.append(estate_detail)
+            except urllib.error.HTTPError as e:
+                print(e.reason)
 
             #results = Geocoder(api_key).geocode(estate_name)
             #estate_detail["lat"] = results[0].geometry.location.lat();
