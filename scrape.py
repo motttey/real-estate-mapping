@@ -41,29 +41,32 @@ def get_real_estate_list(town_name_list):
         all_estate_name_list[town_name] = estate_name_list
     return all_estate_name_list
 
-def get_geocode_from_estate_name(estate_name_list, api_key):
-    estate_detail_list = []
-    for estate_name in estate_name_list:
-        time.sleep(6)
-        estate_detail = {}
-        estate_detail["name"] = estate_name
+def get_geocode_from_estate_name(all_estate_name_list, api_key):
+    for key, estate_name_list in all_estate_name_list.items():
+        estate_detail_list = []
+        for estate_name in estate_name_list:
+            time.sleep(6)
+            estate_detail = {}
+            estate_detail["name"] = estate_name
 
-        request = urllib.request.Request("https://www.geocoding.jp/api/?q="+urllib.request.quote(estate_name.encode('utf-8')))
-        with urllib.request.urlopen(request) as response:
-            result_xml = response.read()
-            parse_result = xmltodict.parse(result_xml)
-            result = parse_result["result"]
-            print(parse_result["result"])
-            if "coordinate" in result:
-                estate_detail["lat"] = result["coordinate"]["lat"];
-                estate_detail["lng"] = result["coordinate"]["lng"];
-        #results = Geocoder(api_key).geocode(estate_name)
-        #estate_detail["lat"] = results[0].geometry.location.lat();
-        #estate_detail["lng"] = results[0].geometry.location.lng();
+            request = urllib.request.Request("https://www.geocoding.jp/api/?q="+urllib.request.quote(estate_name.encode('utf-8')))
+            with urllib.request.urlopen(request) as response:
+                result_xml = response.read()
+                parse_result = xmltodict.parse(result_xml)
+                result = parse_result["result"]
+                print(parse_result["result"])
+                if "coordinate" in result:
+                    estate_detail["lat"] = result["coordinate"]["lat"];
+                    estate_detail["lng"] = result["coordinate"]["lng"];
+                    print(estate_detail)
+                    estate_detail_list.append(estate_detail)
 
-        print(estate_detail)
-        estate_detail_list.append(estate_detail)
-    return estate_detail_list;
+            #results = Geocoder(api_key).geocode(estate_name)
+            #estate_detail["lat"] = results[0].geometry.location.lat();
+            #estate_detail["lng"] = results[0].geometry.location.lng();
+        f = codecs.open("output"+key+".json", "w", "utf-8")
+        json.dump(estate_detail_list, f, ensure_ascii=False)
+    return 0;
 
 if __name__ == '__main__':
     api_key = sys.argv[1]
@@ -73,6 +76,6 @@ if __name__ == '__main__':
     all_estate_name_list = get_real_estate_list(popular_town_array)
     print(all_estate_name_list)
 
-    estate_detail_list = get_geocode_from_estate_name(all_estate_name_list["恵比寿"], api_key)
-    f = codecs.open("output.json", "w", "utf-8")
-    json.dump(estate_detail_list, f, ensure_ascii=False)
+    estate_detail_list = get_geocode_from_estate_name(all_estate_name_list, api_key)
+    #f = codecs.open("output.json", "w", "utf-8")
+    #json.dump(estate_detail_list, f, ensure_ascii=False)

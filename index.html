@@ -17,7 +17,7 @@
         var projection = d3.geoMercator()
                     .center([ 139.70, 35.64 ])
                     .translate([width/2, height/2])
-                    .scale(96000);
+                    .scale(150000);
 
         var geoPath = d3.geoPath().projection(projection);
         var svg = d3.select("#map")
@@ -32,7 +32,17 @@
             .style("stroke-width", 1)
             .style("fill", "#ffffff");
 
-        $.get("./output.json", function(coordinates_raw){
+        plotCoordinates(projection, "output_ebisu.json", "ebisu", "red");
+        plotCoordinates(projection, "output_sinjuku.json", "sinjuku", "cyan");
+        plotCoordinates(projection, "output_shinagawa.json", "shinagawa", "yellow");
+        plotCoordinates(projection, "output_meguro.json", "meguro", "orange");
+        plotCoordinates(projection, "output_ikebukuro.json", "ikebukuro", "green");
+        plotCoordinates(projection, "output_kichijoji.json", "kichijoji", "blue");
+
+      });
+
+      function plotCoordinates(projection, filename, id, color){
+        $.get("./" + filename, function(coordinates_raw){
           var projected_coordinate = [];
           var coordinates = $.parseJSON(coordinates_raw);
           console.log(coordinates);
@@ -41,8 +51,8 @@
             projected_coordinate.push(projection([d["lng"], d["lat"]]));
           });
 
-          var circles_g = svg.append('g')
-                  .attr('id', 'circles');
+          var circles_g = d3.select("svg").append('g')
+                  .attr('id', 'circles_' + id);
 
           var circles = circles_g.selectAll("circle")
                   .data(projected_coordinate)
@@ -55,14 +65,10 @@
                     return d[1];
                   })
                   .attr('r', 2)
-                  .attr('stroke', 'red')
-                  .attr('fill', 'red');
+                  .attr('stroke', color)
+                  .attr('fill', color);
         });
-
-      });
-
-
-
+      }
     </script>
   </body>
 </html>
