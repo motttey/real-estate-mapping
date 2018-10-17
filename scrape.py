@@ -51,7 +51,10 @@ def get_real_estate_list(town_name_list):
             estate_list = soup_inner.find_all('div', {'class' :'p-section__ttl-line'})
             for estate in estate_list:
                 estate_name = estate.find('div').find('a').text
-                estate_name_list.append(estate_name)
+                
+                # 物件名に地名が含まれるものに限定
+                if town_name in estate_name:
+                    estate_name_list.append(estate_name)
             all_estate_name_list[town_name] = estate_name_list
     return all_estate_name_list
 
