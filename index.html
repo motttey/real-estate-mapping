@@ -17,7 +17,7 @@
         var projection = d3.geoMercator()
                     .center([ 139.70, 35.64 ])
                     .translate([width/2, height/2])
-                    .scale(150000);
+                    .scale(96000);
 
         var geoPath = d3.geoPath().projection(projection);
         var svg = d3.select("#map")
@@ -31,9 +31,10 @@
             .style("stroke", "#5EAFC6")
             .style("stroke-width", 1)
             .style("fill", "#ffffff");
-
-        // plotCoordinates(projection, "output_yokohama.json", "ebisu", "red");
-
+        /*
+        plotCoordinates(projection, "output_yokohama.json", "yokohama", "red");
+        plotCoordinates(projection, "output_musako.json", "musako", "blue");
+        */
 
         plotCoordinates(projection, "output_ebisu.json", "ebisu", "red");
         plotCoordinates(projection, "output_sinjuku.json", "sinjuku", "cyan");
@@ -70,7 +71,31 @@
                   .attr('r', 2)
                   .attr('stroke', color)
                   .attr('fill', color);
+
+          var polygon = d3.polygonHull(projected_coordinate.map(function(d){
+
+              return [d[0], d[1]];
+          }));
+          var hull_g = circles_g.append("g")
+              .attr("class", "hull_g");
+
+          var hull = hull_g.append("path");
+
+          hull.datum(polygon)
+              .attr("d", function(d) { return "M" + d.join("L") + "Z"; })
+              .attr("fill", function(d){
+                  return color;
+              })
+              .attr("stroke", function(d){
+                  return color;
+              })
+              .attr("opacity", "0.3")
+              .attr("id", function(d){
+                  return id + "_hull";
+              });
+
         });
+
       }
     </script>
   </body>
