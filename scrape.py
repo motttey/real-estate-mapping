@@ -51,7 +51,7 @@ def get_real_estate_list(town_name_list):
             estate_list = soup_inner.find_all('div', {'class' :'p-section__ttl-line'})
             for estate in estate_list:
                 estate_name = estate.find('div').find('a').text
-                
+
                 # 物件名に地名が含まれるものに限定
                 if town_name in estate_name:
                     estate_name_list.append(estate_name)
@@ -91,7 +91,8 @@ def get_geocode_from_estate_name(all_estate_name_list, api_key):
 if __name__ == '__main__':
     api_key = sys.argv[1]
 
-    popular_town_array = scrape_towns()
+    # popular_town_array = scrape_towns()
+    popular_town_array = ["渋谷", "中目黒", "自由が丘", "中野", "二子玉川", "赤羽", "荻窪"]
     print(popular_town_array)
     all_estate_name_list = get_real_estate_list(popular_town_array)
     print(all_estate_name_list)

@@ -31,17 +31,28 @@
             .style("stroke", "#5EAFC6")
             .style("stroke-width", 1)
             .style("fill", "#ffffff");
+
+        var tooltip = d3.select("#main")
+          	.append("div")
+            .attr("id", "tooltip")
+          	.style("position", "absolute")
+          	.style("visibility", "hidden")
+          	.text("tooltip");
         /*
         plotCoordinates(projection, "output_yokohama.json", "yokohama", "red");
         plotCoordinates(projection, "output_musako.json", "musako", "blue");
         */
 
         plotCoordinates(projection, "output_ebisu.json", "ebisu", "red");
-        plotCoordinates(projection, "output_sinjuku.json", "sinjuku", "cyan");
+        plotCoordinates(projection, "output_shibuya.json", "shibuya", "darkred");
+        plotCoordinates(projection, "output_jiyugaoka.json", "jiyugaoka", "lime");
+
+        // plotCoordinates(projection, "output_sinjuku.json", "sinjuku", "cyan");
         plotCoordinates(projection, "output_shinagawa.json", "shinagawa", "yellow");
         plotCoordinates(projection, "output_meguro.json", "meguro", "orange");
         plotCoordinates(projection, "output_ikebukuro.json", "ikebukuro", "green");
         plotCoordinates(projection, "output_kichijoji.json", "kichijoji", "blue");
+        plotCoordinates(projection, "output_nakame.json", "nakame", "blue");
 
       });
 
@@ -57,20 +68,6 @@
 
           var circles_g = d3.select("svg").append('g')
                   .attr('id', 'circles_' + id);
-
-          var circles = circles_g.selectAll("circle")
-                  .data(projected_coordinate)
-                  .enter()
-                  .append('circle')
-                  .attr('cx', function(d){
-                    return d[0];
-                  })
-                  .attr('cy', function(d){
-                    return d[1];
-                  })
-                  .attr('r', 2)
-                  .attr('stroke', color)
-                  .attr('fill', color);
 
           var polygon = d3.polygonHull(projected_coordinate.map(function(d){
 
@@ -94,6 +91,26 @@
                   return id + "_hull";
               });
 
+          var circles = circles_g.selectAll("circle")
+              .data(projected_coordinate)
+              .enter()
+              .append('circle')
+              .attr('cx', function(d){
+                return d[0];
+              })
+              .attr('cy', function(d){
+                return d[1];
+              })
+              .attr('r', 1)
+              .attr('stroke', color)
+              .attr('fill', color)
+              .on('mouseover', function(d,i){
+                d3.select("#tooltip")
+                  .style("visibility", "visible")
+                  .style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px")
+                  .text(coordinates[i]["name"]);
+                console.log(coordinates[i]["name"]);
+              });
         });
 
       }
