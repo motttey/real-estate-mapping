@@ -52,11 +52,50 @@
         plotCoordinates(projection, "output_meguro.json", "meguro", "orange");
         plotCoordinates(projection, "output_ikebukuro.json", "ikebukuro", "green");
         plotCoordinates(projection, "output_kichijoji.json", "kichijoji", "blue");
-        plotCoordinates(projection, "output_nakame.json", "nakame", "blue");
 
+        plotStations(projection);
       });
 
-      function plotCoordinates(projection, filename, id, color){
+      function plotStations(projection) {
+        var stations = [
+          {"name": "吉祥寺駅", "lng": 139.58, "lat": 35.703056},
+          {"name": "恵比寿駅", "lng": 139.709739, "lat": 35.647156},
+          {"name": "品川駅", "lng": 139.736571, "lat": 35.6284756},
+          {"name": "目黒駅", "lng": 139.7212501, "lat": 35.6285136},
+          {"name": "自由が丘駅", "lng": 139.6657348, "lat": 35.6074068},
+          {"name": "渋谷駅", "lng": 139.6994471, "lat": 35.6580382},
+          {"name": "池袋駅", "lng": 139.7087114, "lat": 35.7295071},
+        ];
+
+        var projected_coordinate = [];
+        stations.forEach(function(d){
+          projected_coordinate.push(projection([d["lng"], d["lat"]]));
+        });
+
+        var kilometor = projection([0.009, 0])[0] - projection([0, 0])[0];
+        console.log(kilometor);
+
+        var circles_g = d3.select("svg").append('g')
+                .attr('id', 'stations_circle');
+
+        var circles = circles_g.selectAll('.stations_circle')
+            .data(projected_coordinate)
+            .enter()
+            .append('circle')
+            .attr('class', 'stations_circle')
+            .attr('cx', function(d){
+              return d[0];
+            })
+            .attr('cy', function(d){
+              return d[1];
+            })
+            .attr('r', kilometor)
+            .attr('stroke', "black")
+            .attr('fill', "white")
+            .style('opacity', '0.7');
+      }
+
+      function plotCoordinates(projection, filename, id, color) {
         $.get("./" + filename, function(coordinates_raw){
           var projected_coordinate = [];
           var coordinates = $.parseJSON(coordinates_raw);
@@ -95,6 +134,7 @@
               .data(projected_coordinate)
               .enter()
               .append('circle')
+              .attr('class', 'estate_circle')
               .attr('cx', function(d){
                 return d[0];
               })
@@ -109,7 +149,6 @@
                   .style("visibility", "visible")
                   .style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px")
                   .text(coordinates[i]["name"]);
-                console.log(coordinates[i]["name"]);
               });
         });
 
