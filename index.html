@@ -72,6 +72,7 @@
           projected_coordinate.push(projection([d["lng"], d["lat"]]));
         });
 
+        // https://easyramble.com/latitude-and-longitude-per-kilometer.html
         var kilometor = projection([0.009, 0])[0] - projection([0, 0])[0];
         console.log(kilometor);
 
@@ -95,6 +96,19 @@
             .style('opacity', '0.7');
       }
 
+      function calcPolygonArea(polygon) {
+        let N = polygon.length;
+        let polygon_area = 0;
+        polygon.forEach(function(d, i){
+          if (i!==N-1) {
+            polygon_area += d[0] * polygon[i+1][1] - polygon[1+i][0] * d[1];
+          } else {
+            polygon_area += d[0] * polygon[0][1] - polygon[0][0] * d[1];
+          }
+        });
+        return Math.abs(polygon_area * 0.5);
+      }
+
       function plotCoordinates(projection, filename, id, color) {
         $.get("./" + filename, function(coordinates_raw){
           var projected_coordinate = [];
@@ -109,9 +123,12 @@
                   .attr('id', 'circles_' + id);
 
           var polygon = d3.polygonHull(projected_coordinate.map(function(d){
-
               return [d[0], d[1]];
           }));
+
+          var polygon_area = calcPolygonArea(polygon);
+          console.log(projected_coordinate.length, polygon_area);
+
           var hull_g = circles_g.append("g")
               .attr("class", "hull_g");
 
