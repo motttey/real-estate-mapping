@@ -6,6 +6,7 @@ import sys
 import json
 import xmltodict
 import xml.etree.ElementTree as ET
+import mysql.connector
 from bs4 import BeautifulSoup
 from pygeocoder import Geocoder
 
@@ -58,7 +59,8 @@ def get_real_estate_list(town_name_list):
             all_estate_name_list[town_name] = estate_name_list
     return all_estate_name_list
 
-def get_geocode_from_estate_name(all_estate_name_list, api_key):
+def get_geocode_from_estate_name(all_estate_name_list, conn):
+    i = 0
     for key, estate_name_list in all_estate_name_list.items():
         estate_detail_list = []
         for estate_name in estate_name_list:
@@ -78,6 +80,17 @@ def get_geocode_from_estate_name(all_estate_name_list, api_key):
                         estate_detail["lng"] = result["coordinate"]["lng"];
                         print(estate_detail)
                         estate_detail_list.append(estate_detail)
+                        i = i + 1
+
+                        # DBへ値を格納
+                        print("INSERT INTO estate_data (ID, town_name, estate_name, lat, lng) VALUES ('"+ str(i) +"','"+ key + "','" + estate_detail["name"] + "',"+ estate_detail["lat"] +','+ estate_detail["lng"] +');')
+
+                        cur = conn.cursor()
+                        cur.execute("INSERT INTO estate_data (ID, town_name, estate_name, lat, lng) VALUES ('"+ str(i) +"','"+ key + "','" + estate_detail["name"] + "',"+ estate_detail["lat"] +','+ estate_detail["lng"] +');')
+                        conn.commit()
+                        # table = cur.fetchall()
+                        # print(table)
+
             except urllib.error.HTTPError as e:
                 print(e.reason)
 
@@ -89,14 +102,23 @@ def get_geocode_from_estate_name(all_estate_name_list, api_key):
     return 0;
 
 if __name__ == '__main__':
-    api_key = sys.argv[1]
+    root_pass = sys.argv[1]
+    conn = mysql.connector.connect(
+        host = '127.0.0.1',
+        user = 'root',
+        password = root_pass,
+        database = 'real_estate',
+        auth_plugin='mysql_native_password'
+    )
+    connected = conn.is_connected()
+    print(connected)
 
     # popular_town_array = scrape_towns()
-    popular_town_array = ["渋谷", "中目黒", "自由が丘", "中野", "二子玉川", "赤羽", "荻窪"]
-    print(popular_town_array)
+    popular_town_array = ["国分寺"]
+    # print(popular_town_array)
     all_estate_name_list = get_real_estate_list(popular_town_array)
     print(all_estate_name_list)
 
-    estate_detail_list = get_geocode_from_estate_name(all_estate_name_list, api_key)
+    estate_detail_list = get_geocode_from_estate_name(all_estate_name_list, conn)
     #f = codecs.open("output.json", "w", "utf-8")
     #json.dump(estate_detail_list, f, ensure_ascii=False)
