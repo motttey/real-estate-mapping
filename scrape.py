@@ -60,9 +60,11 @@ def get_real_estate_list(town_name_list):
     return all_estate_name_list
 
 def get_geocode_from_estate_name(all_estate_name_list, conn):
-    i = 0
+    key_id = 0
+    # keyの再検討
     for key, estate_name_list in all_estate_name_list.items():
         estate_detail_list = []
+        data_id = 0
         for estate_name in estate_name_list:
             time.sleep(10)
             estate_detail = {}
@@ -80,13 +82,14 @@ def get_geocode_from_estate_name(all_estate_name_list, conn):
                         estate_detail["lng"] = result["coordinate"]["lng"];
                         print(estate_detail)
                         estate_detail_list.append(estate_detail)
-                        i = i + 1
+                        data_id = data_id + 1
 
                         # DBへ値を格納
-                        print("INSERT INTO estate_data (ID, town_name, estate_name, lat, lng) VALUES ('"+ str(i) +"','"+ key + "','" + estate_detail["name"] + "',"+ estate_detail["lat"] +','+ estate_detail["lng"] +');')
+                        key_id_str = str('{0:03d}'.format(key_id));
+                        print("INSERT INTO estate_data (estate_id, town_id, estate_name, lat, lng) VALUES ('"+ key_id_str + str('{0:04d}'.format(data_id)) +"','"+ key_id_str + "','" + estate_detail["name"] + "',"+ estate_detail["lat"] +','+ estate_detail["lng"] +');')
 
                         cur = conn.cursor()
-                        cur.execute("INSERT INTO estate_data (ID, town_name, estate_name, lat, lng) VALUES ('"+ str(i) +"','"+ key + "','" + estate_detail["name"] + "',"+ estate_detail["lat"] +','+ estate_detail["lng"] +');')
+                        cur.execute("INSERT INTO estate_data (estate_id, town_id, estate_name, lat, lng) VALUES ('"+ key_id_str + str('{0:04d}'.format(data_id)) +"','" + key_id_str  + "','" + estate_detail["name"] + "',"+ estate_detail["lat"] +','+ estate_detail["lng"] +');')
                         conn.commit()
                         # table = cur.fetchall()
                         # print(table)
@@ -94,9 +97,10 @@ def get_geocode_from_estate_name(all_estate_name_list, conn):
             except urllib.error.HTTPError as e:
                 print(e.reason)
 
-            #results = Geocoder(api_key).geocode(estate_name)
-            #estate_detail["lat"] = results[0].geometry.location.lat();
-            #estate_detail["lng"] = results[0].geometry.location.lng();
+        key_id = key_id + 1
+        #results = Geocoder(api_key).geocode(estate_name)
+        #estate_detail["lat"] = results[0].geometry.location.lat();
+        #estate_detail["lng"] = results[0].geometry.location.lng();
         f = codecs.open("output"+key+".json", "w", "utf-8")
         json.dump(estate_detail_list, f, ensure_ascii=False)
     return 0;
