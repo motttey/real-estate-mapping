@@ -2,7 +2,12 @@
 <html>
   <body>
     <div id="main">
-      <svg id="map"></svg>
+      <div id="map_div" style="position:fixed;">
+        <svg id="map"> </svg>
+      </div>
+      <div id="plot_div" style="position:fixed;">
+        <svg id="plot"> </svg>
+      </div>
     </div>
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
@@ -12,32 +17,24 @@
       const width = 1500;
       const height = 1500;
 
-      $.get("./JapanCityGeoJson/geojson/prefectures/13.json", function(data){
-      	var data_parsed = $.parseJSON(data);
-        var projection = d3.geoMercator()
-                    .center([ 139.70, 35.64 ])
-                    .translate([width/2, height/2])
-                    .scale(96000);
+      var svg = d3.select("#map")
+        .attr("width",width)
+        .attr("height",height);
 
-        var geoPath = d3.geoPath().projection(projection);
-        var svg = d3.select("#map")
-          .attr("width",width)
-          .attr("height",height);
+      var plots_svg = d3.select("#plot")
+        .attr("width",width)
+        .attr("height",height);
 
-        var map = svg.selectAll("path").data(data_parsed.features)
-          .enter()
-          .append("path")
-            .attr("d", geoPath)
-            .style("stroke", "#5EAFC6")
-            .style("stroke-width", 1)
-            .style("fill", "#ffffff");
-
-        var tooltip = d3.select("#main")
-          	.append("div")
-            .attr("id", "tooltip")
-          	.style("position", "absolute")
-          	.style("visibility", "hidden")
-          	.text("tooltip");
+      var projection = d3.geoMercator()
+                  .center([ 139.70, 35.64 ])
+                  .translate([width/2, height/2])
+                  .scale(64000);
+      $.when(
+        plotPrefecture(11, projection),
+        plotPrefecture(12, projection),
+        plotPrefecture(13, projection),
+        plotPrefecture(14, projection)
+      ).done(function(){
         /*
         plotCoordinates(projection, "output_yokohama.json", "yokohama", "red");
         plotCoordinates(projection, "output_musako.json", "musako", "blue");
@@ -55,6 +52,31 @@
 
         plotStations(projection);
       });
+
+      function plotPrefecture(id, projection){
+        $.get("./JapanCityGeoJson/geojson/prefectures/"+id+".json", function(data){
+            var data_parsed = $.parseJSON(data);
+            var geoPath = d3.geoPath().projection(projection);
+
+            var prefecture_group =  d3.select("svg").append("g").attr("class", "prefecture_g")
+
+            var map = prefecture_group.selectAll("path")
+              .data(data_parsed.features)
+              .enter()
+              .append("path")
+                .attr("d", geoPath)
+                .style("stroke", "#5EAFC6")
+                .style("stroke-width", 1)
+                .style("fill", "#ffffff");
+
+            var tooltip = d3.select("#main")
+                .append("div")
+                .attr("id", "tooltip")
+                .style("position", "absolute")
+                .style("visibility", "hidden")
+                .text("tooltip");
+        });
+      }
 
       function plotStations(projection) {
         var stations = [
@@ -76,7 +98,7 @@
         var kilometor = projection([0.009, 0])[0] - projection([0, 0])[0];
         console.log(kilometor);
 
-        var circles_g = d3.select("svg").append('g')
+        var circles_g = d3.select("#plot").append('g')
                 .attr('id', 'stations_circle');
 
         var circles = circles_g.selectAll('.stations_circle')
@@ -119,7 +141,8 @@
             projected_coordinate.push(projection([d["lng"], d["lat"]]));
           });
 
-          var circles_g = d3.select("svg").append('g')
+          var circles_g = d3.select("#plot").append('g')
+                  .attr('class', 'estate_circles_g')
                   .attr('id', 'circles_' + id);
 
           var polygon = d3.polygonHull(projected_coordinate.map(function(d){
