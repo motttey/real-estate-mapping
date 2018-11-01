@@ -25,6 +25,13 @@
         .attr("width",width)
         .attr("height",height);
 
+      var tooltip = d3.select("#main")
+          .append("div")
+          .attr("id", "tooltip")
+          .style("position", "absolute")
+          .style("visibility", "hidden")
+          .text("tooltip");
+
       var projection = d3.geoMercator()
                   .center([ 139.70, 35.64 ])
                   .translate([width/2, height/2])
@@ -35,21 +42,17 @@
         plotPrefecture(13, projection),
         plotPrefecture(14, projection)
       ).done(function(){
+
+        for (var i = 0; i < 10; i++) {
+            let id = ('000' + i).slice(-3);
+            plotCoordinates(projection, "output"+id+".json", id, d3.schemeCategory10[i]);
+        }
+
         /*
-        plotCoordinates(projection, "output_yokohama.json", "yokohama", "red");
-        plotCoordinates(projection, "output_musako.json", "musako", "blue");
+        plotCoordinates(projection, "output_ebisu.json", "ebisu", color20(2));
+        plotCoordinates(projection, "output_shibuya.json", "shibuya", color20(3));
+        plotCoordinates(projection, "output_jiyugaoka.json", "jiyugaoka", color20(4));
         */
-
-        plotCoordinates(projection, "output_ebisu.json", "ebisu", "red");
-        plotCoordinates(projection, "output_shibuya.json", "shibuya", "darkred");
-        plotCoordinates(projection, "output_jiyugaoka.json", "jiyugaoka", "lime");
-
-        // plotCoordinates(projection, "output_sinjuku.json", "sinjuku", "cyan");
-        plotCoordinates(projection, "output_shinagawa.json", "shinagawa", "yellow");
-        plotCoordinates(projection, "output_meguro.json", "meguro", "orange");
-        plotCoordinates(projection, "output_ikebukuro.json", "ikebukuro", "green");
-        plotCoordinates(projection, "output_kichijoji.json", "kichijoji", "blue");
-
         plotStations(projection);
       });
 
@@ -68,13 +71,6 @@
                 .style("stroke", "#5EAFC6")
                 .style("stroke-width", 1)
                 .style("fill", "#ffffff");
-
-            var tooltip = d3.select("#main")
-                .append("div")
-                .attr("id", "tooltip")
-                .style("position", "absolute")
-                .style("visibility", "hidden")
-                .text("tooltip");
         });
       }
 
