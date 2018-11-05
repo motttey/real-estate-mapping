@@ -60,9 +60,10 @@ def get_real_estate_list(town_name_list):
     return all_estate_name_list
 
 def get_geocode_from_estate_name(all_estate_name_list, conn):
-    key_id = 0
+    key_id = 33
     # keyの再検討
     for key, estate_name_list in all_estate_name_list.items():
+        key_id_str = str('{0:03d}'.format(key_id));
         estate_detail_list = []
         data_id = 0
         for estate_name in estate_name_list:
@@ -85,7 +86,6 @@ def get_geocode_from_estate_name(all_estate_name_list, conn):
                         data_id = data_id + 1
 
                         # DBへ値を格納
-                        key_id_str = str('{0:03d}'.format(key_id));
                         print("INSERT INTO estate_data (estate_id, town_id, estate_name, lat, lng) VALUES ('"+ key_id_str + str('{0:04d}'.format(data_id)) +"','"+ key_id_str + "','" + estate_detail["name"] + "',"+ estate_detail["lat"] +','+ estate_detail["lng"] +');')
 
                         cur = conn.cursor()
@@ -101,7 +101,7 @@ def get_geocode_from_estate_name(all_estate_name_list, conn):
         #results = Geocoder(api_key).geocode(estate_name)
         #estate_detail["lat"] = results[0].geometry.location.lat();
         #estate_detail["lng"] = results[0].geometry.location.lng();
-        f = codecs.open("output"+key+".json", "w", "utf-8")
+        f = codecs.open("output"+key_id_str+".json", "w", "utf-8")
         json.dump(estate_detail_list, f, ensure_ascii=False)
     return 0;
 
@@ -118,7 +118,11 @@ if __name__ == '__main__':
     print(connected)
 
     # popular_town_array = scrape_towns()
-    popular_town_array = ["国分寺"]
+    # 東京は除外
+    # popular_town_array = ["横浜", "恵比寿", "吉祥寺", "品川", "池袋", "武蔵小杉", "新宿", "目黒", "大宮", "浦和",
+    #                      "渋谷", "中目黒", "自由が丘", "鎌倉", "中野", "二子玉川", "船橋", "赤羽"]
+    popular_town_array = ["調布", "下北沢", "三鷹", "川越", "たまプラーザ"]
+
     # print(popular_town_array)
     all_estate_name_list = get_real_estate_list(popular_town_array)
     print(all_estate_name_list)

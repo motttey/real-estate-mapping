@@ -5,6 +5,9 @@
       <div id="map_div" style="position:fixed;">
         <svg id="map"> </svg>
       </div>
+      <div id="hull_div" style="position:fixed;">
+        <svg id="hull"> </svg>
+      </div>
       <div id="plot_div" style="position:fixed;">
         <svg id="plot"> </svg>
       </div>
@@ -25,6 +28,10 @@
         .attr("width",width)
         .attr("height",height);
 
+      var hulls_svg = d3.select("#hull")
+        .attr("width",width)
+        .attr("height",height);
+
       var tooltip = d3.select("#main")
           .append("div")
           .attr("id", "tooltip")
@@ -36,6 +43,7 @@
                   .center([ 139.70, 35.64 ])
                   .translate([width/2, height/2])
                   .scale(64000);
+
       $.when(
         plotPrefecture(11, projection),
         plotPrefecture(12, projection),
@@ -43,9 +51,11 @@
         plotPrefecture(14, projection)
       ).done(function(){
 
-        for (var i = 0; i < 10; i++) {
+        for (var i = 0; i < 32; i++) {
             let id = ('000' + i).slice(-3);
-            plotCoordinates(projection, "output"+id+".json", id, d3.schemeCategory10[i]);
+            if(i !== 14 && i!== 16 && i!== 19 && i!== 20 && i!== 23 && i!== 28) {
+              plotCoordinates(projection, "output"+id+".json", id, d3.schemeCategory10[i % 10]);
+            }
         }
 
         /*
@@ -76,13 +86,13 @@
 
       function plotStations(projection) {
         var stations = [
-          {"name": "吉祥寺駅", "lng": 139.58, "lat": 35.703056},
-          {"name": "恵比寿駅", "lng": 139.709739, "lat": 35.647156},
-          {"name": "品川駅", "lng": 139.736571, "lat": 35.6284756},
-          {"name": "目黒駅", "lng": 139.7212501, "lat": 35.6285136},
-          {"name": "自由が丘駅", "lng": 139.6657348, "lat": 35.6074068},
-          {"name": "渋谷駅", "lng": 139.6994471, "lat": 35.6580382},
-          {"name": "池袋駅", "lng": 139.7087114, "lat": 35.7295071},
+          {"name": "Kichijoji", "lng": 139.58, "lat": 35.703056},
+          {"name": "Ebisu", "lng": 139.709739, "lat": 35.647156},
+          {"name": "Shinagawa", "lng": 139.736571, "lat": 35.6284756},
+          {"name": "Meguro", "lng": 139.7212501, "lat": 35.6285136},
+          {"name": "Jiyugaoka", "lng": 139.6657348, "lat": 35.6074068},
+          {"name": "Shibuya", "lng": 139.6994471, "lat": 35.6580382},
+          {"name": "Ikebukuro", "lng": 139.7087114, "lat": 35.7295071},
         ];
 
         var projected_coordinate = [];
@@ -112,6 +122,23 @@
             .attr('stroke', "black")
             .attr('fill', "white")
             .style('opacity', '0.7');
+
+        var text = circles_g.selectAll('.stations_text')
+            .data(projected_coordinate)
+            .enter()
+            .append("text")
+            .attr('class', 'stations_text')
+            .attr('x', function(d){
+              return d[0];
+            })
+            .attr('y', function(d){
+              return d[1];
+            })
+            .text(function(d,i){
+                console.log( stations[i]);
+                return stations[i]["name"];
+            });
+
       }
 
       function calcPolygonArea(polygon) {
@@ -141,15 +168,17 @@
                   .attr('class', 'estate_circles_g')
                   .attr('id', 'circles_' + id);
 
+          var hull_g = d3.select("#hull").append('g')
+                  .attr('class', 'estate_hull_g')
+                  .attr('id', 'hulls_' + id);
+
           var polygon = d3.polygonHull(projected_coordinate.map(function(d){
               return [d[0], d[1]];
           }));
 
           var polygon_area = calcPolygonArea(polygon);
+          var polygon_centroid = d3.polygonCentroid(polygon)
           console.log(projected_coordinate.length, polygon_area);
-
-          var hull_g = circles_g.append("g")
-              .attr("class", "hull_g");
 
           var hull = hull_g.append("path");
 
