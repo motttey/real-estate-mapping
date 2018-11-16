@@ -16,9 +16,45 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
     <script type="text/javascript">
+      const stations = [
+        {"name": "Kichijoji", "lng": 139.58, "lat": 35.703056},
+        {"name": "Ebisu", "lng": 139.709739, "lat": 35.647156},
+        {"name": "Shinagawa", "lng": 139.736571, "lat": 35.6284756},
+        {"name": "Meguro", "lng": 139.7212501, "lat": 35.6285136},
+        {"name": "Jiyugaoka", "lng": 139.6657348, "lat": 35.6074068},
+        {"name": "Shibuya", "lng": 139.6994471, "lat": 35.6580382},
+        {"name": "Ikebukuro", "lng": 139.7087114, "lat": 35.7295071},
+        {"name": "Yokohama", "lng": 139.6201192, "lat": 35.4657901},
+        {"name": "Musashikosugi", "lng": 139.657272, "lat": 35.5766378},
+        {"name": "Shinjuku", "lng": 139.6895924, "lat": 35.6982244},
+        {"name": "Omiya", "lng": 139.6216608, "lat": 35.9064528},
+        {"name": "Urawa", "lng": 139.6562868, "lat": 35.8583478},
+        {"name": "Kamakura", "lng": 139.5105125, "lat": 35.331778},
+        {"name": "Futakotamagawa", "lng": 139.6252443, "lat": 35.6123586},
+        {"name": "Akabane", "lng": 139.7163193, "lat": 35.7795679},
+        {"name": "Kawasaki", "lng": 139.694695, "lat": 35.5313693},
+        {"name": "Kitasenju", "lng": 139.8031493, "lat": 35.7496806},
+        {"name": "Ogikubo", "lng": 139.603315, "lat": 35.70471},
+        {"name": "Omotesando", "lng": 139.7098981, "lat": 35.6652554},
+        {"name": "Ebina", "lng": 139.3887433, "lat": 35.4526059},
+        {"name": "Sakuragicho", "lng": 139.6288723, "lat": 35.4509537},
+        {"name": "Tsudanuma", "lng": 140.0182132, "lat": 35.6912192},
+        {"name": "Saitama-Shintoshin", "lng": 139.631547, "lat": 35.8937993},
+        {"name": "Sangenchaya", "lng": 139.6692071, "lat": 35.643621},
+        {"name": "Machida", "lng": 139.4630475, "lat": 35.5498564},
+        {"name": "Akihabara", "lng": 139.7709203, "lat": 35.6983573},
+        //{"name": "Fujisawa", "lng": 139.485438, "lat": 35.3385319},
+        {"name": "Shimokitazawa", "lng": 139.664788, "lat": 35.6615272},
+        {"name": "Kawagoe", "lng": 139.458202, "lat": 35.9044475},
+        {"name": "Mitaka", "lng": 139.5588351, "lat": 35.7027199},
+        {"name": "Tama-Praza", "lng": 139.5563338, "lat": 35.5774101},
+        {"name": "Tachikawa", "lng": 139.4115521, "lat": 35.6979144},
+      ];
 
       const width = 1500;
       const height = 1500;
+
+      const city_length = 39;
 
       const zoom = d3.zoom()
        .scaleExtent([1, 40])
@@ -51,6 +87,7 @@
                   .translate([width/2, height/2])
                   .scale(64000);
 
+      const red_gray_grad = d3.interpolate("red", "gray");
       $.when(
         plotPrefecture(11, projection),
         plotPrefecture(12, projection),
@@ -58,18 +95,13 @@
         plotPrefecture(14, projection)
       ).done(function(){
 
-        for (var i = 0; i < 39; i++) {
+        for (var i = 0; i < city_length; i++) {
             let id = ('000' + i).slice(-3);
-            if(i !== 14 && i!== 16 && i!== 19 && i!== 23 && i!== 29 && i!== 33 && i!== 34) {
-              plotCoordinates(projection, "output"+id+".json", id, d3.schemeCategory10[i % 10]);
+            if(i !== 14 && i!== 16 && i!== 19 && i!== 23 && i!== 28 && i!== 29 && i!== 33 && i!== 34) {
+              plotCoordinates(projection, "output"+id+".json", id, red_gray_grad(i/city_length));
             }
         }
 
-        /*
-        plotCoordinates(projection, "output_ebisu.json", "ebisu", color20(2));
-        plotCoordinates(projection, "output_shibuya.json", "shibuya", color20(3));
-        plotCoordinates(projection, "output_jiyugaoka.json", "jiyugaoka", color20(4));
-        */
         plotStations(projection);
       });
 
@@ -89,47 +121,13 @@
               .enter()
               .append("path")
                 .attr("d", geoPath)
-                .style("stroke", "#5EAFC6")
+                .style("stroke", "gray")
                 .style("stroke-width", 1)
                 .style("fill", "#ffffff");
         });
       }
 
       function plotStations(projection) {
-        var stations = [
-          {"name": "Kichijoji", "lng": 139.58, "lat": 35.703056},
-          {"name": "Ebisu", "lng": 139.709739, "lat": 35.647156},
-          {"name": "Shinagawa", "lng": 139.736571, "lat": 35.6284756},
-          {"name": "Meguro", "lng": 139.7212501, "lat": 35.6285136},
-          {"name": "Jiyugaoka", "lng": 139.6657348, "lat": 35.6074068},
-          {"name": "Shibuya", "lng": 139.6994471, "lat": 35.6580382},
-          {"name": "Ikebukuro", "lng": 139.7087114, "lat": 35.7295071},
-          {"name": "Yokohama", "lng": 139.6201192, "lat": 35.4657901},
-          {"name": "Musashikosugi", "lng": 139.657272, "lat": 35.5766378},
-          {"name": "Shinjuku", "lng": 139.6895924, "lat": 35.6982244},
-          {"name": "Omiya", "lng": 139.6216608, "lat": 35.9064528},
-          {"name": "Urawa", "lng": 139.6562868, "lat": 35.8583478},
-          {"name": "Kamakura", "lng": 139.5105125, "lat": 35.331778},
-          {"name": "Futakotamagawa", "lng": 139.6252443, "lat": 35.6123586},
-          {"name": "Akabane", "lng": 139.7163193, "lat": 35.7795679},
-          {"name": "Kawasaki", "lng": 139.694695, "lat": 35.5313693},
-          {"name": "Kitasenju", "lng": 139.8031493, "lat": 35.7496806},
-          {"name": "Ogikubo", "lng": 139.603315, "lat": 35.70471},
-          {"name": "Omotesando", "lng": 139.7098981, "lat": 35.6652554},
-          {"name": "Ebina", "lng": 139.3887433, "lat": 35.4526059},
-          {"name": "Sakuragicho", "lng": 139.6288723, "lat": 35.4509537},
-          {"name": "Tsudanuma", "lng": 140.0182132, "lat": 35.6912192},
-          {"name": "Saitama-Shintoshin", "lng": 139.631547, "lat": 35.8937993},
-          {"name": "Sangenchaya", "lng": 139.6692071, "lat": 35.643621},
-          {"name": "Machida", "lng": 139.4630475, "lat": 35.5498564},
-          {"name": "Akihabara", "lng": 139.7709203, "lat": 35.6983573},
-          //{"name": "Fujisawa", "lng": 139.485438, "lat": 35.3385319},
-          {"name": "Shimokitazawa", "lng": 139.664788, "lat": 35.6615272},
-          {"name": "Kawagoe", "lng": 139.458202, "lat": 35.9044475},
-          {"name": "Mitaka", "lng": 139.5588351, "lat": 35.7027199},
-          {"name": "Tama-Praza", "lng": 139.5563338, "lat": 35.5774101},
-        ];
-
         var projected_coordinate = [];
         stations.forEach(function(d){
           projected_coordinate.push(projection([d["lng"], d["lat"]]));
@@ -212,7 +210,8 @@
           }));
 
           var polygon_area = calcPolygonArea(polygon);
-          var polygon_centroid = d3.polygonCentroid(polygon)
+          var polygon_centroid = d3.polygonCentroid(polygon);
+          console.log(coordinates[0]["name"]);
           console.log(projected_coordinate.length, polygon_area);
 
           var hull = hull_g.append("path");
@@ -225,7 +224,7 @@
               .attr("stroke", function(d){
                   return color;
               })
-              .attr("opacity", "0.3")
+              .attr("opacity", "0.2")
               .attr("id", function(d){
                   return id + "_hull";
               });
@@ -244,6 +243,7 @@
               .attr('r', 1)
               .attr('stroke', color)
               .attr('fill', color)
+              .attr('opacity', 0.5)
               .on('mouseover', function(d,i){
                 d3.select("#tooltip")
                   .style("visibility", "visible")
