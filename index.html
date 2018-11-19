@@ -43,18 +43,25 @@
         {"name": "Sangenchaya", "lng": 139.6692071, "lat": 35.643621},
         {"name": "Machida", "lng": 139.4630475, "lat": 35.5498564},
         {"name": "Akihabara", "lng": 139.7709203, "lat": 35.6983573},
-        //{"name": "Fujisawa", "lng": 139.485438, "lat": 35.3385319},
+        {"name": "Fujisawa", "lng": 139.485438, "lat": 35.3385319},
         {"name": "Shimokitazawa", "lng": 139.664788, "lat": 35.6615272},
         {"name": "Kawagoe", "lng": 139.458202, "lat": 35.9044475},
         {"name": "Mitaka", "lng": 139.5588351, "lat": 35.7027199},
         {"name": "Tama-Praza", "lng": 139.5563338, "lat": 35.5774101},
         {"name": "Tachikawa", "lng": 139.4115521, "lat": 35.6979144},
+        {"name": "Ueno", "lng": 139.7752151, "lat": 35.7141715},
+        {"name": "Kashiwa", "lng": 139.9687232, "lat": 35.8621541},
+        {"name": "Chohu", "lng": 139.5426079, "lat": 35.6517667},
+        {"name": "Nakano", "lng": 139.663569, "lat": 35.7056142},
+        {"name": "Funabashi", "lng": 139.9826962, "lat": 35.7017527},
+        {"name": "Maihama", "lng": 139.885078, "lat": 35.6349019},
+
       ];
 
       const width = 1500;
       const height = 1500;
 
-      const city_length = 39;
+      const city_length = 40;
 
       const zoom = d3.zoom()
        .scaleExtent([1, 40])
@@ -97,7 +104,7 @@
 
         for (var i = 0; i < city_length; i++) {
             let id = ('000' + i).slice(-3);
-            if(i !== 14 && i!== 16 && i!== 19 && i!== 23 && i!== 28 && i!== 29 && i!== 33 && i!== 34) {
+            if (i!== 29) {
               plotCoordinates(projection, "output"+id+".json", id, red_gray_grad(i/city_length));
             }
         }

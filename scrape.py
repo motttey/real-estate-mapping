@@ -38,8 +38,7 @@ def get_real_estate_list(town_name_list):
         estate_name_list = []
         estate_count_str = soup.find('p', {'class' :'pager-count'}).find('span', {'class' :'pager-decimal'}).text
         estate_count = int(estate_count_str)
-        page_max = int(estate_count / 10)
-        print(estate_count)
+        page_max = int(estate_count / 10) + 1
 
         for page_index in range(init_page, page_max, 1):
             time.sleep(1)
@@ -79,8 +78,8 @@ def get_geocode_from_estate_name(all_estate_name_list, conn):
                     result = parse_result["result"]
                     print(parse_result["result"])
                     if "coordinate" in result:
-                        estate_detail["lat"] = result["coordinate"]["lat"];
-                        estate_detail["lng"] = result["coordinate"]["lng"];
+                        estate_detail["lat"] = result["coordinate"]["lat"]
+                        estate_detail["lng"] = result["coordinate"]["lng"]
                         print(estate_detail)
                         estate_detail_list.append(estate_detail)
                         data_id = data_id + 1
