@@ -11,28 +11,36 @@
       <div id="plot_div" style="position:fixed;">
         <svg id="plot"> </svg>
       </div>
+      <div id="anotation_div" style="position:fixed; pointer-events: none;">
+        <svg id="anotation"> </svg>
+      </div>
     </div>
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
     <script type="text/javascript">
       const stations = [
-        {"name": "Kichijoji", "lng": 139.58, "lat": 35.703056},
-        {"name": "Ebisu", "lng": 139.709739, "lat": 35.647156},
-        {"name": "Shinagawa", "lng": 139.736571, "lat": 35.6284756},
-        {"name": "Meguro", "lng": 139.7212501, "lat": 35.6285136},
-        {"name": "Jiyugaoka", "lng": 139.6657348, "lat": 35.6074068},
-        {"name": "Shibuya", "lng": 139.6994471, "lat": 35.6580382},
-        {"name": "Ikebukuro", "lng": 139.7087114, "lat": 35.7295071},
         {"name": "Yokohama", "lng": 139.6201192, "lat": 35.4657901},
+        {"name": "Ebisu", "lng": 139.709739, "lat": 35.647156},
+        {"name": "Kichijoji", "lng": 139.58, "lat": 35.703056},
+        {"name": "Shinagawa", "lng": 139.736571, "lat": 35.6284756},
+        {"name": "Ikebukuro", "lng": 139.7087114, "lat": 35.7295071},
         {"name": "Musashikosugi", "lng": 139.657272, "lat": 35.5766378},
         {"name": "Shinjuku", "lng": 139.6895924, "lat": 35.6982244},
+        {"name": "Meguro", "lng": 139.7212501, "lat": 35.6285136},
         {"name": "Omiya", "lng": 139.6216608, "lat": 35.9064528},
         {"name": "Urawa", "lng": 139.6562868, "lat": 35.8583478},
+        {"name": "Shibuya", "lng": 139.6994471, "lat": 35.6580382},
+        {"name": "Nakameguro", "lng": 139.6966557, "lat": 35.6441631},
+        {"name": "Jiyugaoka", "lng": 139.6657348, "lat": 35.6074068},
         {"name": "Kamakura", "lng": 139.5105125, "lat": 35.331778},
+        {"name": "Nakano", "lng": 139.663569, "lat": 35.7056142},
         {"name": "Futakotamagawa", "lng": 139.6252443, "lat": 35.6123586},
+        {"name": "Funabashi", "lng": 139.9826962, "lat": 35.7017527},
         {"name": "Akabane", "lng": 139.7163193, "lat": 35.7795679},
         {"name": "Kawasaki", "lng": 139.694695, "lat": 35.5313693},
+        {"name": "Kashiwa", "lng": 139.9687232, "lat": 35.8621541},
+        {"name": "Tachikawa", "lng": 139.4115521, "lat": 35.6979144},
         {"name": "Kitasenju", "lng": 139.8031493, "lat": 35.7496806},
         {"name": "Ogikubo", "lng": 139.603315, "lat": 35.70471},
         {"name": "Omotesando", "lng": 139.7098981, "lat": 35.6652554},
@@ -40,22 +48,17 @@
         {"name": "Sakuragicho", "lng": 139.6288723, "lat": 35.4509537},
         {"name": "Tsudanuma", "lng": 140.0182132, "lat": 35.6912192},
         {"name": "Saitama-Shintoshin", "lng": 139.631547, "lat": 35.8937993},
+        {"name": "Ueno", "lng": 139.7752151, "lat": 35.7141715},
         {"name": "Sangenchaya", "lng": 139.6692071, "lat": 35.643621},
         {"name": "Machida", "lng": 139.4630475, "lat": 35.5498564},
         {"name": "Akihabara", "lng": 139.7709203, "lat": 35.6983573},
         {"name": "Fujisawa", "lng": 139.485438, "lat": 35.3385319},
-        {"name": "Shimokitazawa", "lng": 139.664788, "lat": 35.6615272},
-        {"name": "Kawagoe", "lng": 139.458202, "lat": 35.9044475},
-        {"name": "Mitaka", "lng": 139.5588351, "lat": 35.7027199},
-        {"name": "Tama-Praza", "lng": 139.5563338, "lat": 35.5774101},
-        {"name": "Tachikawa", "lng": 139.4115521, "lat": 35.6979144},
-        {"name": "Ueno", "lng": 139.7752151, "lat": 35.7141715},
-        {"name": "Kashiwa", "lng": 139.9687232, "lat": 35.8621541},
         {"name": "Chohu", "lng": 139.5426079, "lat": 35.6517667},
-        {"name": "Nakano", "lng": 139.663569, "lat": 35.7056142},
-        {"name": "Funabashi", "lng": 139.9826962, "lat": 35.7017527},
+        {"name": "Shimokitazawa", "lng": 139.664788, "lat": 35.6615272},
+        {"name": "Mitaka", "lng": 139.5588351, "lat": 35.7027199},
+        {"name": "Kawagoe", "lng": 139.458202, "lat": 35.9044475},
+        {"name": "Tama-Praza", "lng": 139.5563338, "lat": 35.5774101},
         {"name": "Maihama", "lng": 139.885078, "lat": 35.6349019},
-
       ];
 
       const width = 1500;
@@ -69,18 +72,25 @@
        .extent([[0, 0], [width, height]])
        .on("zoom", zoomed);
 
+      // ボタンなどのUIと関連付けて表示/非表示できるようにする
+      var visible_towns = [0,1,2,3,4,5,6,7,8,9,10];
+
       var svg = d3.select("#map")
-        .attr("width",width)
-        .attr("height",height);
+        .attr("width", width)
+        .attr("height", height);
 
       var plots_svg = d3.select("#plot")
-        .attr("width",width)
-        .attr("height",height)
+        .attr("width", width)
+        .attr("height", height)
         .call(zoom);
 
       var hulls_svg = d3.select("#hull")
-        .attr("width",width)
-        .attr("height",height);
+        .attr("width", width)
+        .attr("height", height);
+
+      var anotation_svg = d3.select("#anotation")
+        .attr("width", width)
+        .attr("height", height);
 
       var tooltip = d3.select("#main")
           .append("div")
@@ -90,30 +100,32 @@
           .text("tooltip");
 
       var projection = d3.geoMercator()
-                  .center([ 139.70, 35.64 ])
-                  .translate([width/2, height/2])
-                  .scale(64000);
+          .center([ 139.70, 35.64 ])
+          .translate([width/2, height/2])
+          .scale(64000);
 
       const red_gray_grad = d3.interpolate("red", "gray");
       $.when(
         plotPrefecture(11, projection),
         plotPrefecture(12, projection),
         plotPrefecture(13, projection),
-        plotPrefecture(14, projection)
+        plotPrefecture(14, projection),
+        plotAllEstate(projection),
       ).done(function(){
-
-        for (var i = 0; i < city_length; i++) {
-            let id = ('000' + i).slice(-3);
-            if (i!== 29) {
-              plotCoordinates(projection, "output"+id+".json", id, red_gray_grad(i/city_length));
-            }
-        }
-
         plotStations(projection);
       });
 
       function zoomed() {
         d3.selectAll("g").attr("transform", d3.event.transform);
+      }
+
+      function plotAllEstate(projection){
+        for (var i = 0; i < city_length; i++) {
+            let id = ('000' + i).slice(-3);
+            if (i!== 29 && visible_towns.indexOf(i) > 0) {
+              plotCoordinates(projection, "output"+id+".json", id, red_gray_grad(i/city_length));
+            }
+        }
       }
 
       function plotPrefecture(id, projection){
@@ -144,7 +156,7 @@
         var kilometor = projection([0.009, 0])[0] - projection([0, 0])[0];
         console.log(kilometor);
 
-        var circles_g = d3.select("#plot").append('g')
+        var circles_g = d3.select("#anotation").append('g')
                 .attr('id', 'stations_circle');
 
         var circles = circles_g.selectAll('.stations_circle')
@@ -160,7 +172,7 @@
             })
             .attr('r', kilometor)
             .attr('stroke', "black")
-            .attr('fill', "white")
+            .attr('fill', "none")
             .style('opacity', '0.7');
 
         var text = circles_g.selectAll('.stations_text')
@@ -201,6 +213,7 @@
           console.log(coordinates);
 
           coordinates.forEach(function(d){
+            d["city_id"] = id;
             projected_coordinate.push(projection([d["lng"], d["lat"]]));
           });
 
@@ -250,7 +263,9 @@
               .attr('r', 1)
               .attr('stroke', color)
               .attr('fill', color)
-              .attr('opacity', 0.5)
+              .style('opacity', function(d,i){
+                return 0.5;
+              })
               .on('mouseover', function(d,i){
                 d3.select("#tooltip")
                   .style("visibility", "visible")
