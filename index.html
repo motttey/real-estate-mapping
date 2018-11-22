@@ -49,6 +49,7 @@
         {"name": "Tsudanuma", "lng": 140.0182132, "lat": 35.6912192},
         {"name": "Saitama-Shintoshin", "lng": 139.631547, "lat": 35.8937993},
         {"name": "Ueno", "lng": 139.7752151, "lat": 35.7141715},
+        {"name": "Maihama", "lng": 139.885078, "lat": 35.6349019}, // wrong
         {"name": "Sangenchaya", "lng": 139.6692071, "lat": 35.643621},
         {"name": "Machida", "lng": 139.4630475, "lat": 35.5498564},
         {"name": "Akihabara", "lng": 139.7709203, "lat": 35.6983573},
@@ -65,7 +66,7 @@
       const height = 1500;
 
       const city_length = 40;
-
+      console.log(stations);
       const zoom = d3.zoom()
        .scaleExtent([1, 40])
        .translateExtent([[0,0], [width, height]])
@@ -73,7 +74,7 @@
        .on("zoom", zoomed);
 
       // ボタンなどのUIと関連付けて表示/非表示できるようにする
-      var visible_towns = [0,1,2,3,4,5,6,7,8,9,10];
+      var visible_towns = [0,1,2,3,4,5,6,7,8,9,10,11,12];
 
       var svg = d3.select("#map")
         .attr("width", width)
@@ -104,6 +105,10 @@
           .translate([width/2, height/2])
           .scale(64000);
 
+      // https://easyramble.com/latitude-and-longitude-per-kilometer.html
+      var kilometor = projection([0.0090133729745762, 0])[0] - projection([0, 0])[0];
+      console.log(kilometor);
+
       const red_gray_grad = d3.interpolate("red", "gray");
       $.when(
         plotPrefecture(11, projection),
@@ -122,8 +127,9 @@
       function plotAllEstate(projection){
         for (var i = 0; i < city_length; i++) {
             let id = ('000' + i).slice(-3);
-            if (i!== 29 && visible_towns.indexOf(i) > 0) {
-              plotCoordinates(projection, "output"+id+".json", id, red_gray_grad(i/city_length));
+            // if (i!== 29 && visible_towns.indexOf(i) > 0) {
+            if (i!== 29) {
+              plotCoordinates(projection, "output"+id+".json", i, red_gray_grad(i/city_length));
             }
         }
       }
@@ -151,10 +157,6 @@
         stations.forEach(function(d){
           projected_coordinate.push(projection([d["lng"], d["lat"]]));
         });
-
-        // https://easyramble.com/latitude-and-longitude-per-kilometer.html
-        var kilometor = projection([0.009, 0])[0] - projection([0, 0])[0];
-        console.log(kilometor);
 
         var circles_g = d3.select("#anotation").append('g')
                 .attr('id', 'stations_circle');
@@ -212,8 +214,11 @@
           var coordinates = $.parseJSON(coordinates_raw);
           console.log(coordinates);
 
+          var total_distance = 0;
+          console.log(id);
           coordinates.forEach(function(d){
             d["city_id"] = id;
+            total_distance += Math.sqrt( Math.pow(d["lng"]-stations[id]["lng"], 2) + Math.pow(d["lat"]-stations[id]["lat"], 2) );
             projected_coordinate.push(projection([d["lng"], d["lat"]]));
           });
 
@@ -233,6 +238,8 @@
           var polygon_centroid = d3.polygonCentroid(polygon);
           console.log(coordinates[0]["name"]);
           console.log(projected_coordinate.length, polygon_area);
+          console.log("total_distance", total_distance);
+          console.log("average_distance", (total_distance/projected_coordinate.length) * (1/0.0090133729745762));
 
           var hull = hull_g.append("path");
 
