@@ -110,6 +110,8 @@
       console.log(kilometor);
 
       const red_gray_grad = d3.interpolate("red", "gray");
+      const while_blue_grad = d3.interpolate("white", "blue");
+
       $.when(
         plotPrefecture(11, projection),
         plotPrefecture(12, projection),
@@ -141,14 +143,35 @@
 
             var prefecture_group =  d3.select("svg").append("g").attr("class", "prefecture_g")
 
-            var map = prefecture_group.selectAll("path")
-              .data(data_parsed.features)
-              .enter()
-              .append("path")
-                .attr("d", geoPath)
-                .style("stroke", "gray")
-                .style("stroke-width", 1)
-                .style("fill", "#ffffff");
+            var price_data;
+            var price_max;
+
+            // JSONにしてオブジェクト単位で取れるようにする
+            d3.csv("price.csv").then(function(p_data){
+               price_data = p_data;
+               price_max = d3.max(price_data, function(d){ return parseInt(d.price)});
+               console.log(price_data);
+
+               var map = prefecture_group.selectAll("path")
+                 .data(data_parsed.features)
+                 .enter()
+                 .append("path")
+                   .attr("d", geoPath)
+                   .attr("id", function(d){ return d.id; })
+                   .style("stroke", "gray")
+                   .style("stroke-width", 1);
+
+               prefecture_group.selectAll("path").each(function(d,i){
+                 d3.select(this).style("fill", function(){
+                   let price = price_data.find(function(p) {
+                      return p.id.toString() === d.id.toString();
+                   });
+                   if (price) return while_blue_grad(parseInt(price.price)/price_max);
+                   else return "white";
+                 })
+               });
+            });
+
         });
       }
 
@@ -236,6 +259,7 @@
 
           var polygon_area = calcPolygonArea(polygon);
           var polygon_centroid = d3.polygonCentroid(polygon);
+
           console.log(coordinates[0]["name"]);
           console.log(projected_coordinate.length, polygon_area);
           console.log("total_distance", total_distance);
