@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <div id="main">
+      <div id="map_div" style="position:fixed;">
+        <svg id="map"> </svg>
+      </div>
+      <div id="hull_div" style="position:fixed;">
+        <svg id="hull"> </svg>
+      </div>
+      <div id="plot_div" style="position:fixed;">
+        <svg id="plot"> </svg>
+      </div>
+      <div id="anotation_div" style="position:fixed; pointer-events: none;">
+        <svg id="anotation"> </svg>
+      </div>
+    </div>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="./main.js"></script>
+
+    <script type="text/javascript">
+      const stations = [
+        {"name": "Yokohama", "lng": 139.6201192, "lat": 35.4657901},
+        {"name": "Sakuragicho", "lng": 139.6288723, "lat": 35.4509537},
+      ];
+
+      const width = 1500;
+      const height = 1500;
+
+      const zoom = d3.zoom()
+       .scaleExtent([1, 40])
+       .translateExtent([[0,0], [width, height]])
+       .extent([[0, 0], [width, height]])
+       .on("zoom", zoomed);
+
+      var svg = d3.select("#map")
+        .attr("width", width)
+        .attr("height", height);
+
+      var plots_svg = d3.select("#plot")
+        .attr("width", width)
+        .attr("height", height)
+        .call(zoom);
+
+      var hulls_svg = d3.select("#hull")
+        .attr("width", width)
+        .attr("height", height);
+
+      var anotation_svg = d3.select("#anotation")
+        .attr("width", width)
+        .attr("height", height);
+
+      var tooltip = d3.select("#main")
+          .append("div")
+          .attr("id", "tooltip")
+          .style("position", "absolute")
+          .style("visibility", "hidden")
+          .text("tooltip");
+
+      var projection = d3.geoMercator()
+          .center([ 139.62, 35.5 ])
+          .translate([width/2, height/2])
+          .scale(96000);
+
+      // https://easyramble.com/latitude-and-longitude-per-kilometer.html
+      var kilometor = projection([0.0090133729745762, 0])[0] - projection([0, 0])[0];
+      console.log(kilometor);
+      const red_gray_grad = d3.interpolate("red", "gray");
+      const while_blue_grad = d3.interpolate("white", "blue");
+
+      $.when(
+        plotPrefecture(14, projection, 400000),
+        plotCoordinates(projection, "output000.json", 0, red_gray_grad(0)),
+      ).done(function(){
+        plotStations(projection, stations);
+      });
+
+      function zoomed() {
+        d3.selectAll("g").attr("transform", d3.event.transform);
+        // highlightYokohama(); // 後からUIなどで呼び出す (非同期処理の設定必要)
+      }
+
+      function highlightYokohama() {
+        console.log("do");
+        d3.select("g").selectAll("path").each(function(d,i){
+          console.log(d);
+          d3.select(this).style("stroke", function(){
+            console.log(d);
+            if ( parseInt(d.id) > 14101 && parseInt(d.id) <= 14118) return "red";
+            else return "none";
+          })
+        })
+      }
+
+
+    </script>
+  </body>
+</html>
