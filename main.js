@@ -33,7 +33,7 @@ function plotPrefecture(id, projection, price_max){
          prefecture_group.selectAll("path").each(function(d,i){
            d3.select(this).style("fill", function(){
              if (d.id.toString() in price_data) return while_blue_grad(parseInt(price_data[d.id].price)/price_max);
-             else return "white";
+             else return "black";
            })
          });
       });
@@ -48,7 +48,7 @@ function plotStations(projection, stations) {
   });
 
   var circles_g = d3.select("#anotation").append('g')
-          .attr('id', 'stations_circle');
+      .attr('id', 'stations_circle');
 
   var circles = circles_g.selectAll('.stations_circle')
       .data(projected_coordinate)
@@ -62,7 +62,7 @@ function plotStations(projection, stations) {
         return d[1];
       })
       .attr('r', kilometor)
-      .attr('stroke', "black")
+      .attr('stroke', "limegreen")
       .attr('fill', "none")
       .style('opacity', '0.7');
 
@@ -80,7 +80,8 @@ function plotStations(projection, stations) {
       .text(function(d,i){
           console.log( stations[i]);
           return stations[i]["name"];
-      });
+      })
+      .style("fill", "lime");
 
 }
 
@@ -167,7 +168,9 @@ function plotCoordinates(projection, filename, id, color) {
           d3.select("#tooltip")
             .style("visibility", "visible")
             .style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px")
-            .text(coordinates[i]["name"]);
+            .text(coordinates[i]["name"])
+            .style("color", "lime")
+            .style("background-color", "gray");
         });
   });
 

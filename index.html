@@ -79,7 +79,8 @@
 
       var svg = d3.select("#map")
         .attr("width", width)
-        .attr("height", height);
+        .attr("height", height)
+        .style("background-color", "black");
 
       var plots_svg = d3.select("#plot")
         .attr("width", width)
@@ -111,7 +112,7 @@
       console.log(kilometor);
 
       const red_gray_grad = d3.interpolate("red", "gray");
-      const while_blue_grad = d3.interpolate("white", "blue");
+      const while_blue_grad = d3.interpolate("black", "blue");
 
       $.when(
         plotPrefecture(11, projection, 1000000),
@@ -120,7 +121,7 @@
         plotPrefecture(14, projection, 1000000),
         plotAllEstate(projection),
       ).done(function(){
-        plotStations(projection);
+        plotStations(projection, stations);
       });
 
       function zoomed() {
