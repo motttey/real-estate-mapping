@@ -101,7 +101,7 @@ function calcPolygonArea(polygon) {
 function plotCoordinates(projection, filename, id, color) {
   $.get("./" + filename, function(coordinates_raw){
     var projected_coordinate = [];
-    var coordinates = $.parseJSON(coordinates_raw);
+    var coordinates =  $.parseJSON(coordinates_raw);
     console.log(coordinates);
 
     var total_distance = 0;
@@ -146,6 +146,41 @@ function plotCoordinates(projection, filename, id, color) {
         .attr("id", function(d){
             return id + "_hull";
         });
+
+    var contourDensity = d3.contourDensity()
+      .x(function(d) { return d[0]; })
+      .y(function(d) { return d[1]; })
+      .size([width, height])
+      .cellSize(10)
+      .bandwidth(20)
+
+    var contourDensityValues = contourDensity(projected_coordinate);
+
+    const contour_color = d3.scaleSequential(function(t) { return d3.interpolate("red", "white")(1-t); })
+      .domain([d3.max(contourDensityValues, function(d) { return d.value }), 0.00]);
+
+    // overlap contour on convex hull
+    d3.select("#hull").append("g")
+      .attr("stroke", "none")
+      .attr("stroke-width", "0.0")
+      .selectAll("path")
+      .data(contourDensityValues)
+      .enter()
+      .append("path")
+      .attr("d", d3.geoPath())
+      .attr("stroke", function(d) { return contour_color(d.value);})
+      .attr("stroke-width", "0.5")
+      .attr("fill", "none")
+      .attr("opacity", function(d){
+        // polygon外のcontourを非表示にする
+        let flag = true;
+        d.coordinates.forEach(function(coordinate){
+          coordinate[0].forEach(function(c){
+            if(!d3.polygonContains(polygon, c)) flag = false;
+          });
+        });
+        return (flag)? "0.5": "0.0";
+      });
 
     var circles = circles_g.selectAll("circle")
         .data(projected_coordinate)
