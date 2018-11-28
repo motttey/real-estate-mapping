@@ -1,5 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Yokohama Town map</title>
+  </head>
   <body>
     <div id="main">
       <div id="map_div" style="position:fixed;">
@@ -46,7 +50,6 @@
         {"name": "Tsurugamine", "lng": 139.54900669800617, "lat": 35.47473692268097},
         {"name": "Futamatagawa", "lng": 139.52683551140058, "lat": 35.462377235941354},
         {"name": "Toka-ichiba", "lng": 139.526222, "lat": 35.51654299999998},
-
       ];
 
       const width = 1500;
@@ -60,7 +63,9 @@
 
       var svg = d3.select("#map")
         .attr("width", width)
-        .attr("height", height);
+        .attr("height", height)
+        .style("background-color", "black");
+
 
       var plots_svg = d3.select("#plot")
         .attr("width", width)
@@ -91,19 +96,18 @@
       const kilometor = projection([0.0090133729745762, 0])[0] - projection([0, 0])[0];
       console.log(kilometor);
       const red_gray_grad = d3.interpolate("red", "gray");
-      const while_blue_grad = d3.interpolate("white", "blue");
+      const while_blue_grad = d3.interpolate("black", "blue");
 
       $.when(
         plotPrefecture(14, projection, 400000),
         plotCoordinates(projection, "output000.json", 0, red_gray_grad(0)),
       ).done(function(){
         plotStations(projection, stations);
-        sleep(1000);
       });
 
       function zoomed() {
         d3.selectAll("g").attr("transform", d3.event.transform);
-        highlightYokohama(); 
+        highlightYokohama();
       }
 
       $('#yokohama_button').click(function(){

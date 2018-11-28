@@ -62,7 +62,7 @@ function plotStations(projection, stations) {
         return d[1];
       })
       .attr('r', kilometor)
-      .attr('stroke', "limegreen")
+      .attr('stroke', "mediumspringgreen")
       .attr('fill', "none")
       .style('opacity', '0.7');
 
@@ -81,7 +81,8 @@ function plotStations(projection, stations) {
           console.log( stations[i]);
           return stations[i]["name"];
       })
-      .style("fill", "lime");
+      .style("fill", "aquamarine")
+      .style("opacity", "0.7");
 
 }
 
@@ -151,8 +152,8 @@ function plotCoordinates(projection, filename, id, color) {
       .x(function(d) { return d[0]; })
       .y(function(d) { return d[1]; })
       .size([width, height])
-      .cellSize(10)
-      .bandwidth(20)
+      .cellSize(25)
+      .bandwidth(40)
 
     var contourDensityValues = contourDensity(projected_coordinate);
 
@@ -174,11 +175,13 @@ function plotCoordinates(projection, filename, id, color) {
       .attr("opacity", function(d){
         // polygon外のcontourを非表示にする
         let flag = true;
+
         d.coordinates.forEach(function(coordinate){
           coordinate[0].forEach(function(c){
             if(!d3.polygonContains(polygon, c)) flag = false;
           });
         });
+
         return (flag)? "0.5": "0.0";
       });
 
@@ -204,8 +207,8 @@ function plotCoordinates(projection, filename, id, color) {
             .style("visibility", "visible")
             .style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px")
             .text(coordinates[i]["name"])
-            .style("color", "lime")
-            .style("background-color", "gray");
+            .style("color", "aquamarine")
+            .style("background-color", "dimgray");
         });
   });
 
