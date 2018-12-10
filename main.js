@@ -6,22 +6,29 @@ function plotAllEstate(projection){
         plotCoordinates(projection, "output"+id+".json", i, red_gray_grad(i/city_length));
       }
   }
+
+  // 下位をマッピング
+  const lowest_num = 130;
+  for (var i = 102; i < lowest_num; i++) {
+      let id = ('000' + i).slice(-3);
+      plotCoordinates(projection, "output"+id+".json", i, "cyan");
+  }
 }
 
 function plotPrefecture(id, projection, price_max){
   $.get("./JapanCityGeoJson/geojson/prefectures/"+id+".json", function(data){
-      var data_parsed = $.parseJSON(data);
-      var geoPath = d3.geoPath().projection(projection);
+      let data_parsed = $.parseJSON(data);
+      let geoPath = d3.geoPath().projection(projection);
 
-      var prefecture_group =  d3.select("svg").append("g").attr("class", "prefecture_g")
+      let prefecture_group =  d3.select("svg").append("g").attr("class", "prefecture_g")
 
-      var price_data;
+      let price_data;
 
       // JSONにしてオブジェクト単位で取れるようにする
       d3.json("price.json").then(function(p_data){
          price_data = p_data;
 
-         var map = prefecture_group.selectAll("path")
+         let map = prefecture_group.selectAll("path")
            .data(data_parsed.features)
            .enter()
            .append("path")
@@ -105,11 +112,11 @@ function plotCoordinates(projection, filename, id, color) {
     var coordinates =  $.parseJSON(coordinates_raw);
     console.log(coordinates);
 
-    var total_distance = 0;
+    // var total_distance = 0;
     console.log(id);
     coordinates.forEach(function(d){
       d["city_id"] = id;
-      total_distance += Math.sqrt( Math.pow(d["lng"]-stations[id]["lng"], 2) + Math.pow(d["lat"]-stations[id]["lat"], 2) );
+      // total_distance += Math.sqrt( Math.pow(d["lng"]-stations[id]["lng"], 2) + Math.pow(d["lat"]-stations[id]["lat"], 2) );
       projected_coordinate.push(projection([d["lng"], d["lat"]]));
     });
 
@@ -130,8 +137,8 @@ function plotCoordinates(projection, filename, id, color) {
 
     console.log(coordinates[0]["name"]);
     console.log(projected_coordinate.length, polygon_area);
-    console.log("total_distance", total_distance);
-    console.log("average_distance", (total_distance/projected_coordinate.length) * (1/0.0090133729745762));
+    // console.log("total_distance", total_distance);
+    // console.log("average_distance", (total_distance/projected_coordinate.length) * (1/0.0090133729745762));
 
     var hull = hull_g.append("path");
 

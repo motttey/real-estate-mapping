@@ -59,7 +59,7 @@ def get_real_estate_list(town_name_list):
     return all_estate_name_list
 
 def get_geocode_from_estate_name(all_estate_name_list, conn):
-    key_id = 39
+    key_id = 102
     # keyの再検討
     for key, estate_name_list in all_estate_name_list.items():
         key_id_str = str('{0:03d}'.format(key_id));
@@ -120,7 +120,9 @@ if __name__ == '__main__':
     # 東京は除外
     # popular_town_array = ["横浜", "恵比寿", "吉祥寺", "品川", "池袋", "武蔵小杉", "新宿", "目黒", "大宮", "浦和",
     #                      "渋谷", "中目黒", "自由が丘", "鎌倉", "中野", "二子玉川", "船橋", "赤羽"]
-    popular_town_array = ["舞浜"]
+    popular_town_array = ["巣鴨", "小田原", "田町", "御茶ノ水", "センター北", "江ノ島", "南流山", "八王子", "土浦", "小竹向原", "鶴見", "武蔵小山", "古河"
+                        , "稲毛", "後楽園", "京急川崎", "国立", "田園調布", "笹塚", "関内", "学芸大学", "青葉台", "月島", "石神井公園", "高田馬場", "溝の口"
+                        , "上尾", "越谷レイクタウン", "ふじみ野", "新越谷"]
 
     # print(popular_town_array)
     all_estate_name_list = get_real_estate_list(popular_town_array)
