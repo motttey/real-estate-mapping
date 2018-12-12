@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Stastics Bar Charts</title>
+  </head>
+  <body>
+    <div id="main">
+      <div id="stat_svg_div">
+        <svg id="stat_svg"> </svg>
+      </div>
+    </div>
+
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="./main.js"></script>
+
+    <script type="text/javascript">
+      const width = 600;
+      const height = 600;
+      const margin = 100;
+
+      const cyan_gray_grad = d3.interpolate("cyan", "gray");
+      const orange_gray_grad = d3.interpolate("orange", "gray");
+
+      let bar_g = d3.select("#stat_svg")
+        .attr("width", width + margin )
+        .attr("height", height + margin)
+        .append("g")
+  			.attr("id", "bar_g")
+  			.attr("width", width)
+  			.attr("height", height)
+  	    .attr("transform", "translate(" + 0 + "," + 0 + ")");
+
+      let x_bar_scale = d3.scaleBand().rangeRound([margin, width]).padding(0.1);
+      let y_bar_scale = d3.scaleLinear().rangeRound([height, margin]);
+
+      d3.csv("bukken_sparse.csv")
+      .then(function(data) {
+          console.log(data);
+
+          const data_length = data.length;
+
+          x_bar_scale.domain(data.map(function(d) { return d["name"]; }));
+          y_bar_scale.domain([0, d3.max(data, function (d) {
+            return parseInt(d["sparse"]);
+          })]);
+
+          let bar_g = d3.select("#bar_g");
+
+          bar_g.append("g")
+              .attr("class", "axis bar_axis-x")
+              .attr("transform", "translate(0," + height + ")")
+              .call(d3.axisBottom(x_bar_scale))
+              .style("writing-mode", "tb")
+              .style("text-anchor", "start");
+
+          bar_g.append("g")
+              .attr("class", "axis bar_axis-y")
+              .attr("transform", "translate(" + margin + "," + 0 + ")")
+              .call(d3.axisLeft(y_bar_scale))
+            .append("text")
+              .attr("y", 6)
+              .attr("dy", "0.71em")
+              .text("Frequency")
+              .style("font-color", "black");
+
+          bar_g.selectAll(".bar")
+            .data(data)
+            .enter().append("rect")
+              .attr("class", "bar")
+              .attr("x", function(d) { return x_bar_scale(d["name"]); })
+              .attr("y", function(d) { return y_bar_scale(d["sparse"]); })
+              .attr("fill", function(d, i){
+                let color = (parseInt(d["type"])==1)? orange_gray_grad(d["rank"]/data_length): cyan_gray_grad(d["rank"]/data_length);
+                return color;
+              })
+              .attr("width", x_bar_scale.bandwidth())
+              .attr("height", function(d) { return height - y_bar_scale(d["sparse"]); });
+      });
+
+    </script>
+  </body>
+</html>
