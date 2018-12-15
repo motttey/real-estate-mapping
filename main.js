@@ -1,5 +1,5 @@
 function plotAllEstate(projection){
-  for (var i = 0; i < city_length; i++) {
+  for (let i = 0; i < city_length; i++) {
       let id = ('000' + i).slice(-3);
       // if (i!== 29 && visible_towns.indexOf(i) > 0) {
       if (i!== 29) {
@@ -8,10 +8,13 @@ function plotAllEstate(projection){
   }
 
   // 下位をマッピング
+  const min_index = 102;
   const lowest_num = 130;
-  for (var i = 102; i < lowest_num; i++) {
+  for (var i = min_index; i < lowest_num; i++) {
       let id = ('000' + i).slice(-3);
-      plotCoordinates(projection, "output"+id+".json", i, "cyan");
+      if (i!== 104) {
+        plotCoordinates(projection, "output"+id+".json", i, green_gray_grad( (lowest_num - i) / (lowest_num - min_index) ));
+      }
   }
 }
 
@@ -49,15 +52,15 @@ function plotPrefecture(id, projection, price_max){
 }
 
 function plotStations(projection, stations) {
-  var projected_coordinate = [];
+  let projected_coordinate = [];
   stations.forEach(function(d){
     projected_coordinate.push(projection([d["lng"], d["lat"]]));
   });
 
-  var circles_g = d3.select("#anotation").append('g')
+  let circles_g = d3.select("#anotation").append('g')
       .attr('id', 'stations_circle');
 
-  var circles = circles_g.selectAll('.stations_circle')
+  let circles = circles_g.selectAll('.stations_circle')
       .data(projected_coordinate)
       .enter()
       .append('circle')
@@ -73,7 +76,7 @@ function plotStations(projection, stations) {
       .attr('fill', "none")
       .style('opacity', '0.7');
 
-  var text = circles_g.selectAll('.stations_text')
+  let text = circles_g.selectAll('.stations_text')
       .data(projected_coordinate)
       .enter()
       .append("text")
@@ -88,6 +91,7 @@ function plotStations(projection, stations) {
           console.log( stations[i]);
           return stations[i]["name"];
       })
+      .style("font-size", "9px")
       .style("fill", "aquamarine")
       .style("opacity", "0.7");
 
@@ -108,8 +112,8 @@ function calcPolygonArea(polygon) {
 
 function plotCoordinates(projection, filename, id, color) {
   $.get("./" + filename, function(coordinates_raw){
-    var projected_coordinate = [];
-    var coordinates =  $.parseJSON(coordinates_raw);
+    let projected_coordinate = [];
+    let coordinates =  $.parseJSON(coordinates_raw);
     console.log(coordinates);
 
     // var total_distance = 0;
@@ -120,27 +124,27 @@ function plotCoordinates(projection, filename, id, color) {
       projected_coordinate.push(projection([d["lng"], d["lat"]]));
     });
 
-    var circles_g = d3.select("#plot").append('g')
+    let circles_g = d3.select("#plot").append('g')
             .attr('class', 'estate_circles_g')
             .attr('id', 'circles_' + id);
 
-    var hull_g = d3.select("#hull").append('g')
+    let hull_g = d3.select("#hull").append('g')
             .attr('class', 'estate_hull_g')
             .attr('id', 'hulls_' + id);
 
-    var polygon = d3.polygonHull(projected_coordinate.map(function(d){
+    let polygon = d3.polygonHull(projected_coordinate.map(function(d){
         return [d[0], d[1]];
     }));
 
-    var polygon_area = calcPolygonArea(polygon);
-    var polygon_centroid = d3.polygonCentroid(polygon);
+    let polygon_area = calcPolygonArea(polygon);
+    let polygon_centroid = d3.polygonCentroid(polygon);
 
     console.log(coordinates[0]["name"]);
     console.log(projected_coordinate.length, polygon_area);
     // console.log("total_distance", total_distance);
     // console.log("average_distance", (total_distance/projected_coordinate.length) * (1/0.0090133729745762));
 
-    var hull = hull_g.append("path");
+    let hull = hull_g.append("path");
 
     hull.datum(polygon)
         .attr("d", function(d) { return "M" + d.join("L") + "Z"; })
@@ -155,14 +159,14 @@ function plotCoordinates(projection, filename, id, color) {
             return id + "_hull";
         });
 
-    var contourDensity = d3.contourDensity()
+    let contourDensity = d3.contourDensity()
       .x(function(d) { return d[0]; })
       .y(function(d) { return d[1]; })
       .size([width, height])
       .cellSize(25)
       .bandwidth(40)
 
-    var contourDensityValues = contourDensity(projected_coordinate);
+    let contourDensityValues = contourDensity(projected_coordinate);
 
     const contour_color = d3.scaleSequential(function(t) { return d3.interpolate("red", "white")(1-t); })
       .domain([d3.max(contourDensityValues, function(d) { return d.value }), 0.00]);
@@ -192,7 +196,7 @@ function plotCoordinates(projection, filename, id, color) {
         return (flag)? "0.5": "0.0";
       });
 
-    var circles = circles_g.selectAll("circle")
+    let circles = circles_g.selectAll("circle")
         .data(projected_coordinate)
         .enter()
         .append('circle')

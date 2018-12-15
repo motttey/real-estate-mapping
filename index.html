@@ -67,10 +67,42 @@
         {"name": "Maihama", "lng": 139.885078, "lat": 35.6349019},
       ];
 
+      const stations_2 = [
+        {"name": "Sugamo", "lng": 139.7392893, "lat": 35.7334129},
+        {"name": "Odawara", "lng": 139.1532045, "lat": 35.2564449},
+        // {"name": "Tamachi", "lng": 139.7476498, "lat": 35.6456529},
+        {"name": "Center-Kita", "lng": 139.5762933, "lat": 35.553138},
+        {"name": "Enoshima", "lng": 139.4854767, "lat": 35.3109957},
+        {"name": "Minaminagareyama", "lng": 139.9020593, "lat": 35.837809},
+        {"name": "Hachioji", "lng": 139.3388529, "lat": 35.6556157},
+        {"name": "Tsuchiura", "lng": 140.2040233, "lat": 36.078484},
+        {"name": "Kotake-mukaihara", "lng": 139.6773323, "lat": 35.743341},
+        {"name": "Tsurumi", "lng": 139.6716141, "lat": 35.4960216},
+        {"name": "Musashikoyama", "lng": 139.7020021, "lat": 35.6203424},
+        {"name": "Furukawa", "lng": 139.7073663, "lat": 36.194597},
+        {"name": "Inage", "lng": 140.09249, "lat": 35.63717},
+        {"name": "Korakuen", "lng": 139.751822, "lat": 35.708486},
+        // {"name": "Keikyu-Kawasaki", "lng": 139.6984418, "lat": 35.532621},
+        {"name": "Kunitachi", "lng": 139.4441873, "lat": 35.699173},
+        {"name": "Denen-Chohu", "lng": 139.6673414, "lat": 35.5968484},
+        {"name": "Sasazuka", "lng": 139.6649473, "lat": 35.673654},
+        {"name": "Kannai", "lng": 139.6333091, "lat": 35.4439663},
+        {"name": "Gakugei-Daigaku", "lng": 139.6830583, "lat": 35.628743},
+        {"name": "Aobadai", "lng": 139.5159342, "lat": 35.5420693},
+        {"name": "Tsukishima", "lng": 139.7818958, "lat": 35.663861},
+        {"name": "Shakujii-Koen", "lng": 139.6043663, "lat": 35.743645},
+        {"name": "Takadanobaba", "lng": 139.7018977, "lat": 35.7130938},
+        {"name": "Mizonokuchi", "lng": 139.6106234, "lat": 35.5999649},
+        {"name": "Ageo", "lng": 139.586629, "lat": 35.9735224},
+        {"name": "Koshigaya Lake-Town", "lng": 139.822198, "lat": 35.87608},
+        {"name": "Fujimino", "lng": 139.5209783, "lat": 35.860896},
+        {"name": "Shin-Koshigaya", "lng": 139.789783, "lat": 35.8756114},
+      ]
       const width = 1500;
       const height = 1500;
 
       const city_length = 40;
+
       console.log(stations);
       const zoom = d3.zoom()
        .scaleExtent([1, 40])
@@ -127,6 +159,7 @@
         plotAllEstate(projection),
       ).done(function(){
         plotStations(projection, stations);
+        plotStations(projection, stations_2);
       });
 
       function zoomed() {
