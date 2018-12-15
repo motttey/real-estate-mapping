@@ -72,8 +72,11 @@
               .attr("x", function(d) { return x_bar_scale(d["name"]); })
               .attr("y", function(d) { return y_bar_scale(d["sparse"]); })
               .attr("fill", function(d, i){
-                let color = (parseInt(d["type"])==1)? orange_gray_grad(d["rank"]/data_length): cyan_gray_grad(d["rank"]/data_length);
+                let color = (parseInt(d["type"])==1)? "orange": "cyan";
                 return color;
+              })
+              .attr("opacity", function(d, i){
+                return 0.3 + 0.7 * ( (data.length - parseInt(d["rank"])) / data.length);
               })
               .attr("width", x_bar_scale.bandwidth())
               .attr("height", function(d) { return height - y_bar_scale(d["sparse"]); });
