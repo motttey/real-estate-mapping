@@ -9,10 +9,10 @@ function plotAllEstate(projection){
 
   // 下位をマッピング
   const min_index = 102;
-  const lowest_num = 130;
+  const lowest_num = 131;
   for (var i = min_index; i < lowest_num; i++) {
       let id = ('000' + i).slice(-3);
-      if (i!== 104) {
+      if (i!== 104 && i!== 117) {
         plotCoordinates(projection, "output"+id+".json", i, green_gray_grad( (lowest_num - i) / (lowest_num - min_index) ));
       }
   }
@@ -110,17 +110,29 @@ function calcPolygonArea(polygon) {
   return Math.abs(polygon_area * 0.5);
 }
 
+function getTargetStationFromID (id){
+  const target_array = (parseInt(id) > 40) ? stations_2 : stations;
+  let ret_object = {}
+  target_array.forEach(function(d){
+    if (parseInt(d["id"]) === parseInt(id)) ret_object = d;
+  });
+  return ret_object;
+}
+
 function plotCoordinates(projection, filename, id, color) {
   $.get("./" + filename, function(coordinates_raw){
     let projected_coordinate = [];
     let coordinates =  $.parseJSON(coordinates_raw);
     console.log(coordinates);
 
-    // var total_distance = 0;
+    let total_distance = 0;
     console.log(id);
+    let target_station = getTargetStationFromID(id);
+    console.log(target_station);
+
     coordinates.forEach(function(d){
       d["city_id"] = id;
-      // total_distance += Math.sqrt( Math.pow(d["lng"]-stations[id]["lng"], 2) + Math.pow(d["lat"]-stations[id]["lat"], 2) );
+      total_distance += Math.sqrt( Math.pow(d["lng"]-target_station["lng"], 2) + Math.pow(d["lat"]-target_station["lat"], 2) );
       projected_coordinate.push(projection([d["lng"], d["lat"]]));
     });
 
@@ -141,8 +153,8 @@ function plotCoordinates(projection, filename, id, color) {
 
     console.log(coordinates[0]["name"]);
     console.log(projected_coordinate.length, polygon_area);
-    // console.log("total_distance", total_distance);
-    // console.log("average_distance", (total_distance/projected_coordinate.length) * (1/0.0090133729745762));
+    console.log("total_distance", total_distance);
+    console.log("average_distance", (total_distance/projected_coordinate.length) * (1/0.0090133729745762));
 
     let hull = hull_g.append("path");
 
