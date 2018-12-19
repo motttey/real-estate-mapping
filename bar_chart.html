@@ -8,6 +8,11 @@
     <div id="main">
       <div id="stat_svg_div">
         <svg id="stat_svg"> </svg>
+        <svg id="stat_svg2"> </svg>
+      </div>
+      <div id="stat_svg_div2">
+        <svg id="stat_svg3"> </svg>
+        <svg id="stat_svg4"> </svg>
       </div>
     </div>
 
@@ -32,20 +37,55 @@
         .attr("height", height)
         .attr("transform", "translate(" + 0 + "," + 0 + ")");
 
+      let bar_g2 = d3.select("#stat_svg2")
+        .attr("width", width + margin )
+        .attr("height", height + margin)
+        .append("g")
+        .attr("id", "bar_g2")
+        .attr("width", width)
+        .attr("height", height)
+        .attr("transform", "translate(" + 0 + "," + 0 + ")");
+
+      let bar_g3 = d3.select("#stat_svg3")
+        .attr("width", width + margin )
+        .attr("height", height + margin)
+        .append("g")
+        .attr("id", "bar_g3")
+        .attr("width", width)
+        .attr("height", height)
+        .attr("transform", "translate(" + 0 + "," + 0 + ")");
+
+      let bar_g4 = d3.select("#stat_svg4")
+        .attr("width", width + margin )
+        .attr("height", height + margin)
+        .append("g")
+        .attr("id", "bar_g4")
+        .attr("width", width)
+        .attr("height", height)
+        .attr("transform", "translate(" + 0 + "," + 0 + ")");
+
       d3.csv("bukken_sparse.csv")
       .then(function(data) {
           console.log(data);
-          showBarchart(data, "num");
+          showBarchart(bar_g, data, "sparse");
+          showBarchart(bar_g2, data, "distance");
+      });
+
+      d3.csv("bukken_sparse2.csv")
+      .then(function(data) {
+          console.log(data);
+          showBarchart(bar_g3, data, "sparse");
+          showBarchart(bar_g4, data, "distance");
       });
 
       function sortObjectByKey(array, key) {
       	array.sort(function(a, b) {
-          return (parseInt(a[key]) > parseInt(b[key])) ? -1 : 1;
+          return (parseFloat(a[key]) > parseFloat(b[key])) ? -1 : 1;
         });
       	return array;
       }
 
-      function showBarchart(data, key) {
+      function showBarchart(target_g, data, key) {
         let x_bar_scale = d3.scaleBand().rangeRound([margin, width]).padding(0.1);
         let y_bar_scale = d3.scaleLinear().rangeRound([height, margin]);
 
@@ -54,19 +94,19 @@
 
         x_bar_scale.domain(sorted_data.map(function(d) { return d["name"]; }));
         y_bar_scale.domain([0, d3.max(sorted_data, function (d) {
-          return parseInt(d[key]);
+          return parseFloat(d[key]);
         })]);
 
-        let bar_g = d3.select("#bar_g");
+        const rank_max = d3.max(sorted_data, function (d) { return parseInt(d["rank"]); });
 
-        bar_g.append("g")
+        target_g.append("g")
             .attr("class", "axis bar_axis-x")
             .attr("transform", "translate(0," + height + ")")
             .call(d3.axisBottom(x_bar_scale))
             .style("writing-mode", "tb")
             .style("text-anchor", "start");
 
-        bar_g.append("g")
+        target_g.append("g")
             .attr("class", "axis bar_axis-y")
             .attr("transform", "translate(" + margin + "," + 0 + ")")
             .call(d3.axisLeft(y_bar_scale))
@@ -76,18 +116,18 @@
             .text("Frequency")
             .style("font-color", "black");
 
-        bar_g.selectAll(".bar")
+        target_g.selectAll(".bar")
           .data(sorted_data)
           .enter().append("rect")
             .attr("class", "bar")
             .attr("x", function(d) { return x_bar_scale(d["name"]); })
             .attr("y", function(d) { return y_bar_scale(d[key]); })
             .attr("fill", function(d, i){
-              let color = (parseInt(d["type"])==1)? "orange": "cyan";
+              let color = (parseInt(d["type"]) === 1)? "orange": "blue";
               return color;
             })
             .attr("opacity", function(d, i){
-              return 0.3 + 0.7 * ( (data.length - parseInt(d["rank"])) / data.length);
+              return 0.3 + 0.7 * (rank_max - parseInt(d["rank"])) / data.length;
             })
             .attr("width", x_bar_scale.bandwidth())
             .attr("height", function(d) { return height - y_bar_scale(d[key]); });
