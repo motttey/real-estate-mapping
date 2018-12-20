@@ -136,6 +136,14 @@
             })
             .attr("width", x_bar_scale.bandwidth())
             .attr("height", function(d) { return height - y_bar_scale(d[key]); });
+
+        target_g.append("text")
+          .attr("class", "title")
+          .attr("x", (width / 2))
+          .attr("y", (height + 100))
+          .attr("text-anchor", "middle")
+          .style("font-size", "24px")
+          .text(key);
       }
 
     </script>
