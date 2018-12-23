@@ -3,7 +3,7 @@ function plotAllEstate(projection){
   for (let i = 0; i < city_length; i++) {
       let id = ('000' + i).slice(-3);
       // if (i!== 29 && visible_towns.indexOf(i) > 0) {
-      if (i!== 29 && i!== 40) {
+      if (i!== 29 && i!== 40 & i!==42) {
         plotCoordinates(projection, "output"+id+".json", i, red_gray_grad(i/city_length));
       }
   }
@@ -17,6 +17,7 @@ function plotAllEstate(projection){
         plotCoordinates(projection, "output"+id+".json", i, green_gray_grad( (lowest_num - i) / (lowest_num - min_index) ));
       }
   }
+  
 }
 
 function plotPrefecture(id, projection, price_max){
