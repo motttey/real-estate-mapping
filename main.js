@@ -9,7 +9,7 @@ function plotAllEstate(projection){
   }
 
   // 下位をマッピング
-  const min_index = 70;
+  const min_index = city_length + 1;
   const lowest_num = 131;
   for (var i = min_index; i < lowest_num; i++) {
       let id = ('000' + i).slice(-3);
@@ -17,7 +17,7 @@ function plotAllEstate(projection){
         plotCoordinates(projection, "output"+id+".json", i, green_gray_grad( (lowest_num - i) / (lowest_num - min_index) ));
       }
   }
-  
+
 }
 
 function plotPrefecture(id, projection, price_max){
@@ -113,7 +113,7 @@ function calcPolygonArea(polygon) {
 }
 
 function getTargetStationFromID (id){
-  const target_array = (parseInt(id) > 40) ? stations_2 : stations;
+  const target_array = (parseInt(id) > city_length) ? stations_2 : stations;
   let ret_object = {}
   target_array.forEach(function(d){
     if (parseInt(d["id"]) === parseInt(id)) ret_object = d;
