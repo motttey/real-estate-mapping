@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Stastics Bar Charts</title>
+    <style>
+      div.line{
+      	width: 80%;
+      	height: 1.5px;
+      	background-color: gray;
+      	margin-left: 10%;
+      	margin-right: 10%;
+      	margin-top: 5px;
+      	margin-bottom: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="main">
+      <div id="stat_svg_div">
+        <svg id="stat_svg1_1"> </svg>
+        <svg id="stat_svg1_2"> </svg>
+        <svg id="stat_svg1_3"> </svg>
+        <svg id="stat_svg1_4"> </svg>
+      </div>
+    </div>
+
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="./main.js"></script>
+
+    <script type="text/javascript">
+      const width = 1500;
+      const height = 600;
+      const margin = 100;
+
+      const cyan_gray_grad = d3.interpolate("cyan", "gray");
+      const orange_gray_grad = d3.interpolate("orange", "gray");
+
+      let bar_g1_1 = createSVG("1_1");
+      let bar_g1_2 = createSVG("1_2");
+      let bar_g1_3 = createSVG("1_3");
+      let bar_g1_4 = createSVG("1_4");
+
+      d3.csv("bukken_sparse3.csv")
+      .then(function(data) {
+          console.log(data);
+          showBarchart(bar_g1_1, data, "num");
+          showBarchart(bar_g1_2, data, "area");
+          showBarchart(bar_g1_3, data, "sparse");
+          showBarchart(bar_g1_4, data, "distance");
+      });
+
+      function sortObjectByKey(array, key) {
+      	array.sort(function(a, b) {
+          return (parseFloat(a["rank"]) < parseFloat(b["rank"])) ? -1 : 1;
+        });
+      	return array;
+      }
+
+      function createSVG(suffix){
+         return d3.select("#stat_svg" + suffix)
+          .attr("width", width + margin )
+          .attr("height", height + margin)
+          .append("g")
+          .attr("id", "bar_g" + suffix)
+          .attr("width", width)
+          .attr("height", height)
+          .attr("transform", "translate(" + 0 + "," + 0 + ")");
+      }
+
+      function showBarchart(target_g, data, key) {
+        let x_bar_scale = d3.scaleBand().rangeRound([margin, width]).padding(0.1);
+        let y_bar_scale = d3.scaleLinear().rangeRound([height, margin]);
+
+        let sorted_data = sortObjectByKey(data, key);
+        const data_length = data.length;
+
+        x_bar_scale.domain(sorted_data.map(function(d) { return d["name"]; }));
+        y_bar_scale.domain([0, d3.max(sorted_data, function (d) {
+          return parseFloat(d[key]);
+        })]);
+
+        const rank_max = d3.max(sorted_data, function (d) { return parseInt(d["rank"]); });
+
+        target_g.append("g")
+          .attr("class", "axis bar_axis-x")
+          .attr("transform", "translate(0," + height + ")")
+          .call(d3.axisBottom(x_bar_scale))
+          .style("writing-mode", "tb")
+          .style("text-anchor", "start");
+
+        target_g.append("g")
+          .attr("class", "axis bar_axis-y")
+          .attr("transform", "translate(" + margin + "," + 0 + ")")
+          .call(d3.axisLeft(y_bar_scale))
+          .append("text")
+            .attr("y", 6)
+            .attr("dy", "0.71em")
+            .text("Frequency")
+            .style("font-color", "black");
+
+        target_g.selectAll(".bar")
+          .data(sorted_data)
+          .enter().append("rect")
+            .attr("class", "bar")
+            .attr("x", function(d) { return x_bar_scale(d["name"]); })
+            .attr("y", function(d) { return y_bar_scale(d[key]); })
+            .attr("fill", function(d, i){
+              let color = (parseInt(d["type"]) === 1)? "orange": "blue";
+              return color;
+            })
+            .attr("opacity", function(d, i){
+              return 0.3 + 0.7 * (rank_max - parseInt(d["rank"])) / data.length;
+            })
+            .attr("width", x_bar_scale.bandwidth())
+            .attr("height", function(d) { return height - y_bar_scale(d[key]); });
+
+        target_g.append("text")
+          .attr("class", "title")
+          .attr("x", (width / 2))
+          .attr("y", (height + 100))
+          .attr("text-anchor", "middle")
+          .style("font-size", "24px")
+          .text(key);
+      }
+
+    </script>
+  </body>
+</html>
