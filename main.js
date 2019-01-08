@@ -21,7 +21,7 @@ function plotAllEstate(projection){
 }
 
 function plotPrefecture(id, projection, price_max){
-  $.get("./JapanCityGeoJson/geojson/prefectures/"+id+".json", function(data){
+  $.get("./JapanCityGeoJson/geojson/prefectures/"+('00' + id).slice(-2)+".json", function(data){
       let data_parsed = $.parseJSON(data);
       let geoPath = d3.geoPath().projection(projection);
 
