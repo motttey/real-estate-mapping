@@ -74,9 +74,9 @@ function plotStations(projection, stations) {
         return d[1];
       })
       .attr('r', kilometor)
-      .attr('stroke', "mediumspringgreen")
+      .attr('stroke', "gray")
       .attr('fill', "none")
-      .style('opacity', '0.7');
+      .style('opacity', '0.5');
 
   let text = circles_g.selectAll('.stations_text')
       .data(projected_coordinate)
@@ -89,13 +89,16 @@ function plotStations(projection, stations) {
       .attr('y', function(d){
         return d[1];
       })
+      .attr("transform", function(d){
+        return 'rotate(-30 ' + d[0] + ' ' + d[1] + ')'
+      })
       .text(function(d,i){
           console.log( stations[i]);
           return stations[i]["name"];
       })
-      .style("font-size", "9px")
-      .style("fill", "aquamarine")
-      .style("opacity", "0.7");
+      .style("font-size", "6px")
+      .style("fill", "white")
+      .style("opacity", "0.5");
 
 }
 

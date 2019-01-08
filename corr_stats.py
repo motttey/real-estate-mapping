@@ -7,7 +7,7 @@ def show_corr_heatmap(df):
     df_corr = df.corr()
     print(df_corr)
 
-    sns.heatmap(df_corr, vmax=1, vmin=-1, center=0)
+    sns.heatmap(df_corr, annot=True, fmt='.2f', vmax=1, vmin=-1, center=0, cmap='RdYlBu_r')
     plt.show()
 
 if __name__ == '__main__':
