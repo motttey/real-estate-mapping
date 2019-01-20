@@ -55,6 +55,8 @@
       const width = 1500;
       const height = 1500;
 
+      var city_length = 23;
+
       const zoom = d3.zoom()
        .scaleExtent([1, 40])
        .translateExtent([[0,0], [width, height]])
@@ -95,8 +97,8 @@
       // https://easyramble.com/latitude-and-longitude-per-kilometer.html
       const kilometor = projection([0.0090133729745762, 0])[0] - projection([0, 0])[0];
       console.log(kilometor);
-      const red_gray_grad = d3.interpolate("red", "gray");
-      const while_blue_grad = d3.interpolate("black", "blue");
+      const red_gray_grad = d3.interpolate("crimson", "gray");
+      const while_blue_grad = d3.interpolate("black", "dodgerblue");
 
       $.when(
         plotPrefecture(14, projection, 400000),

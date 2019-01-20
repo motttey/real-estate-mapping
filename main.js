@@ -93,7 +93,7 @@ function plotStations(projection, stations) {
         return 'rotate(-30 ' + d[0] + ' ' + d[1] + ')'
       })
       .text(function(d,i){
-          console.log( stations[i]);
+          console.log(stations[i]);
           return stations[i]["name"];
       })
       .style("font-size", "6px")
