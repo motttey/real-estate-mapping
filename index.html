@@ -158,6 +158,55 @@
         {"id": 129, "name": "Fujimino", "lng": 139.5209783, "lat": 35.860896},
         {"id": 130, "name": "Shin-Koshigaya", "lng": 139.789783, "lat": 35.8756114},
       ]
+
+      const stations_keihin = [
+        {"name": "Omiya", "lng": 139.6216608, "lat": 35.9064528},
+        {"name": "Saitama-Shintoshin", "lng": 139.631547, "lat": 35.8937993},
+        {"name": "Yono", "lng": 139.6368437, "lat": 35.8844097},
+        {"name": "Kita-Urawa", "lng": 139.6435243, "lat": 35.872187},
+        {"name": "Urawa", "lng": 139.6562868, "lat": 35.8583478},
+        {"name": "Minami-Urawa", "lng": 139.6671396, "lat": 35.8475733},
+        {"name": "Warabi", "lng": 139.6881347, "lat": 35.8280777},
+        {"name": "Nishi-Kawaguchi", "lng": 139.7021755, "lat": 35.8155374},
+        {"name": "Kawaguchi", "lng": 139.7155782, "lat": 35.7991926},
+        {"name": "Akabane", "lng": 139.7163193, "lat": 35.7795679},
+        {"name": "Higashi-Jujo", "lng": 139.7240169, "lat": 35.7649332},
+        {"name": "Oji", "lng": 139.7354454, "lat": 35.7530728},
+        {"name": "Kaminakazato", "lng": 139.7447686, "lat": 35.7465785},
+        {"name": "Tabata", "lng": 139.7586267, "lat": 35.7381581},
+        {"name": "Nishi-Nippori", "lng": 139.7666137, "lat": 35.7301734},
+        {"name": "Nippori", "lng": 139.7685304, "lat": 35.7279344},
+        {"name": "Uguisudani", "lng": 139.7768839, "lat": 35.7215529},
+        {"name": "Ueno", "lng": 139.7752151, "lat": 35.7141715},
+        {"name": "Okachimachi", "lng": 139.7726717, "lat": 35.7075424},
+        {"name": "Akihabara", "lng": 139.7709203, "lat": 35.6983573},
+        {"name": "Kanda", "lng": 139.7687431, "lat": 35.6918216},
+        {"name": "Tokyo", "lng": 139.7649361, "lat": 35.6812362},
+        {"name": "Yurakucho", "lng": 139.7606312, "lat": 35.6749187},
+        {"name": "Shinbashi", "lng": 139.7561511, "lat": 35.666379},
+        {"name": "Hamamatsucho", "lng": 139.7549403, "lat": 35.655381},
+        {"name": "Tamachi", "lng": 139.7476498, "lat": 35.6456529},
+        {"name": "Shinagawa", "lng": 139.736571, "lat": 35.6284756},
+        {"name": "Ohimachi", "lng": 139.7324695, "lat": 35.6072409},
+        {"name": "Kawasaki", "lng": 139.694695, "lat": 35.5313693},
+        {"name": "Tsurumi", "lng": 139.6716141, "lat": 35.4960216},
+        {"name": "Shin-koyasu", "lng": 139.65384526523275, "lat": 35.48665632268097},
+        {"name": "Higashi-Kanagawa", "lng": 139.6311582, "lat": 35.4779627},
+        {"name": "Yokohama", "lng": 139.6201192, "lat": 35.4657901},
+        {"name": "Sakuragicho", "lng": 139.6288723, "lat": 35.4509537},
+        {"name": "Kannai", "lng": 139.6333038, "lat": 35.4439907},
+        {"name": "Ishikawacho", "lng": 139.6408193, "lat": 35.438708},
+        {"name": "Yamate", "lng": 139.6442363, "lat": 35.426765},
+        {"name": "Negishi", "lng": 139.6330153, "lat": 35.41571},
+        {"name": "Isogo", "lng": 139.6157277, "lat": 35.3998844},
+        {"name": "Shin-Sugita", "lng": 139.6172403, "lat": 35.386768},
+        {"name": "Yokodai", "lng": 139.5948533, "lat": 35.378769},
+        {"name": "Kounandai", "lng": 139.5742163, "lat": 35.37513},
+        {"name": "Hongodai", "lng": 139.5479133, "lat": 35.367824},
+        {"name": "Ofuna", "lng": 139.5291102, "lat": 35.3540475},
+
+      ];
+
       const width = 1500;
       const height = 1500;
 
@@ -221,12 +270,12 @@
       ).done(function(){
         plotStations(projection, stations);
         plotStations(projection, stations_2);
+        plotRailPath(projection, stations_keihin, "cyan");
       });
 
       function zoomed() {
         d3.selectAll("g").attr("transform", d3.event.transform);
       }
-
 
     </script>
   </body>

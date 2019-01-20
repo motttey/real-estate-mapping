@@ -53,6 +53,27 @@ function plotPrefecture(id, projection, price_max){
   });
 }
 
+function plotRailPath(projection, station_list, color) {
+  let projected_coordinate = [];
+  station_list.forEach(function(d){
+    projected_coordinate.push(projection([d["lng"], d["lat"]]));
+  });
+
+  let line = d3.line()
+      .x(function(d) {return d[0];})
+      .y(function(d) {return d[1];});
+
+  let line_g = d3.select("#anotation").append('g')
+      .attr('class', 'rails_line');
+
+  let path = line_g.append('path')
+      .attr("d", line(projected_coordinate))
+      .attr("stroke", color)
+      .attr("fill", "none")
+      .attr("opacity", 0.5)
+      .attr("stroke-width", 5);
+}
+
 function plotStations(projection, stations) {
   let projected_coordinate = [];
   stations.forEach(function(d){
