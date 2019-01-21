@@ -156,6 +156,9 @@ function plotCoordinates(projection, filename, id, color) {
     let target_station = getTargetStationFromID(id);
     console.log(target_station);
 
+    const centre_of_tokyo = {"name": "Tokyo", "lng": 139.7649361, "lat": 35.6812362};
+    let distance_from_tokyo = Math.sqrt( Math.pow(centre_of_tokyo["lng"]-target_station["lng"], 2) + Math.pow(centre_of_tokyo["lat"]-target_station["lat"], 2) );
+
     coordinates.forEach(function(d){
       d["city_id"] = id;
       total_distance += Math.sqrt( Math.pow(d["lng"]-target_station["lng"], 2) + Math.pow(d["lat"]-target_station["lat"], 2) );
@@ -181,6 +184,7 @@ function plotCoordinates(projection, filename, id, color) {
     console.log(projected_coordinate.length, polygon_area);
     console.log("total_distance", total_distance);
     console.log("average_distance", (total_distance/projected_coordinate.length) * (1/0.0090133729745762));
+    console.log("distance_from_tokyo", distance_from_tokyo * (1/0.0090133729745762));
 
     let hull = hull_g.append("path");
 
@@ -201,7 +205,7 @@ function plotCoordinates(projection, filename, id, color) {
       .x(function(d) { return d[0]; })
       .y(function(d) { return d[1]; })
       .size([width, height])
-      .cellSize(25)
+      .cellSize(20)
       .bandwidth(40)
 
     let contourDensityValues = contourDensity(projected_coordinate);
