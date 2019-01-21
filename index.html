@@ -159,6 +159,61 @@
         {"id": 130, "name": "Shin-Koshigaya", "lng": 139.789783, "lat": 35.8756114},
       ]
 
+      const stations_chuo_soubu = [
+        {"name": "Chiba", "lng": 140.1112894, "lat": 35.6129259},
+        {"name": "Nishi-Chiba", "lng": 140.1011063, "lat": 35.622644},
+        {"name": "Inage", "lng": 140.09249, "lat": 35.63717},
+        {"name": "Shin-Kemigawa", "lng": 140.0711363, "lat": 35.651751},
+        {"name": "Makuhari", "lng": 140.0556373, "lat": 35.659416},
+        {"name": "Makuhari-Hongo", "lng": 140.0401153, "lat": 35.6727454},
+        {"name": "Tsudanuma", "lng": 140.0182132, "lat": 35.6912192},
+        {"name": "Higashi-Funabashi", "lng": 140.0018623, "lat": 35.699771},
+        {"name": "Funabashi", "lng": 139.9826962, "lat": 35.7017527},
+        {"name": "Nishifunabashi", "lng": 139.9567781, "lat": 35.7074693},
+        {"name": "Shimousa-Nakayama", "lng": 139.9408893, "lat": 35.714285},
+        {"name": "Motoyawata", "lng": 139.9250454, "lat": 35.7210914},
+        {"name": "Ichikawa", "lng": 139.908197, "lat": 35.728821},
+        {"name": "Koiwa", "lng": 139.8796738, "lat": 35.7329576},
+        {"name": "Shin-Koiwa", "lng": 139.8556782, "lat": 35.7177094},
+        {"name": "Hirai", "lng": 139.835377, "lat": 35.7049033},
+        {"name": "Kameido", "lng": 139.8242325, "lat": 35.6985591},
+        {"name": "Kinshicho", "lng": 139.8122254, "lat": 35.6967252},
+        {"name": "Ryogoku", "lng": 139.7916441, "lat": 35.6950363},
+        {"name": "Asakusabashi", "lng": 139.7822417, "lat": 35.6973769},
+        {"name": "Akihabara", "lng": 139.7709203, "lat": 35.6983573},
+        {"name": "Ochanomizu", "lng": 139.7652479, "lat": 35.6993854},
+        {"name": "Suidobashi", "lng": 139.7513129, "lat": 35.7020484},
+        {"name": "Idabashi", "lng": 139.7428184, "lat": 35.7020673},
+        {"name": "Ichigaya", "lng": 139.7333959, "lat": 35.6910362},
+        {"name": "Yotsuya", "lng": 139.7280084, "lat": 35.6861863},
+        {"name": "Shinanomachi", "lng": 139.7181312, "lat": 35.6800602},
+        {"name": "Sendagaya", "lng": 139.7090921, "lat": 35.6811956},
+        {"name": "Yoyogi", "lng": 139.6998668, "lat": 35.683033},
+        {"name": "Shinjuku", "lng": 139.6895924, "lat": 35.6982244},
+        {"name": "Okubo", "lng": 139.6959908, "lat": 35.7014881},
+        {"name": "Higashi-Nakano", "lng": 139.6816215, "lat": 35.7062291},
+        {"name": "Nakano", "lng": 139.663569, "lat": 35.7056142},
+        {"name": "Koenji", "lng": 139.6476126, "lat": 35.705324},
+        {"name": "Asagaya", "lng": 139.6336703, "lat": 35.704872},
+        {"name": "Ogikubo", "lng": 139.603315, "lat": 35.70471},
+        {"name": "Nishiogikubo", "lng": 139.5995195, "lat": 35.7036906},
+        {"name": "Kichijoji", "lng": 139.58, "lat": 35.703056},
+        {"name": "Mitaka", "lng": 139.5588351, "lat": 35.7027199},
+        {"name": "Musashisakai", "lng": 139.5414691, "lat": 35.7021388},
+        {"name": "Higashi-Koganei", "lng": 139.521595, "lat": 35.7015582},
+        {"name": "Musashi-Koganei", "lng": 139.5045758, "lat": 35.7011135},
+        {"name": "Kokubunji", "lng": 139.4802037, "lat": 35.7001246},
+        {"name": "Nishi-Kokubunji", "lng": 139.4635885, "lat": 35.6998082},
+        {"name": "Kunitachi", "lng": 139.4441873, "lat": 35.699173},
+        {"name": "Tachikawa", "lng": 139.4115521, "lat": 35.6979144},
+        {"name": "Hino", "lng": 139.3918465, "lat": 35.6793649},
+        {"name": "Toyoda", "lng": 139.379271, "lat": 35.6595007},
+        {"name": "Hachioji", "lng": 139.3388529, "lat": 35.6556157},
+        {"name": "Nishi-Hachioji", "lng": 139.3102787, "lat": 35.6565274},
+        {"name": "Takao", "lng": 139.2806064, "lat": 35.6423991},
+
+      ]
+
       const stations_keihin = [
         {"name": "Omiya", "lng": 139.6216608, "lat": 35.9064528},
         {"name": "Saitama-Shintoshin", "lng": 139.631547, "lat": 35.8937993},
@@ -271,6 +326,7 @@
         plotStations(projection, stations);
         plotStations(projection, stations_2);
         plotRailPath(projection, stations_keihin, "cyan");
+        plotRailPath(projection, stations_chuo_soubu, "orange");
       });
 
       function zoomed() {
