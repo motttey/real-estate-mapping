@@ -205,12 +205,12 @@ function plotCoordinates(projection, filename, id, color) {
       .x(function(d) { return d[0]; })
       .y(function(d) { return d[1]; })
       .size([width, height])
-      .cellSize(20)
-      .bandwidth(40)
+      .cellSize(5)
+      .bandwidth(10)
 
     let contourDensityValues = contourDensity(projected_coordinate);
 
-    const contour_color = d3.scaleSequential(function(t) { return d3.interpolate("red", "white")(1-t); })
+    const contour_color = d3.scaleSequential(function(t) { return d3.interpolate(color, "white")(1-t); })
       .domain([d3.max(contourDensityValues, function(d) { return d.value }), 0.00]);
 
     // overlap contour on convex hull
@@ -222,9 +222,9 @@ function plotCoordinates(projection, filename, id, color) {
       .enter()
       .append("path")
       .attr("d", d3.geoPath())
-      .attr("stroke", function(d) { return contour_color(d.value);})
-      .attr("stroke-width", "0.5")
-      .attr("fill", "none")
+      .attr("stroke", "none")
+      // .attr("stroke-width", function(d) { return contour_color(d.value);})
+      .attr("fill", function(d) { return contour_color(d.value);})
       .attr("opacity", function(d){
         // polygon外のcontourを非表示にする
         let flag = true;
@@ -235,7 +235,7 @@ function plotCoordinates(projection, filename, id, color) {
           });
         });
 
-        return (flag)? "0.5": "0.0";
+        return (flag)? "0.05": "0.0";
       });
 
     let circles = circles_g.selectAll("circle")
