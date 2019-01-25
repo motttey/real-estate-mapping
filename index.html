@@ -20,6 +20,7 @@
       </div>
     </div>
     <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="./main.js"></script>
 
@@ -266,6 +267,7 @@
       const height = 1500;
 
       const city_length = 69;
+      const city_max = 130;
 
       console.log(stations);
       const zoom = d3.zoom()
@@ -310,6 +312,24 @@
       // https://easyramble.com/latitude-and-longitude-per-kilometer.html
       var kilometor = projection([0.0090133729745762, 0])[0] - projection([0, 0])[0];
       console.log(kilometor);
+
+
+      var linearCol = d3.scaleLinear()
+        .domain([0, city_max])
+        .range(["crimson", "mediumseagreen"]);
+
+      anotation_svg.append("g")
+        .attr("class", "legendLinear")
+        .attr("transform", "translate(20,20)");
+
+      var legendLinear = d3.legendColor()
+        .shapeWidth(30)
+        .cells([0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130])
+        .orient('horizontal')
+        .scale(linearCol);
+
+      anotation_svg.select(".legendLinear")
+        .call(legendLinear);
 
       const red_gray_grad = d3.interpolate("crimson", "darkgray");
       const green_gray_grad = d3.interpolate("mediumseagreen", "darkgray");
