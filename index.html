@@ -166,6 +166,30 @@
         {"id": 130, "name": "Shin-Koshigaya", "lng": 139.789783, "lat": 35.8756114},
       ]
 
+      const stations_tokyu_toyoko = [
+        {"name": "Shibuya", "lng": 139.6994471, "lat": 35.6580382},
+        {"name": "Daikanyama", "lng": 139.7009593, "lat": 35.6480919},
+        {"name": "Nakameguro", "lng": 139.6966557, "lat": 35.6441631},
+        {"name": "Yutenji", "lng": 139.6885573, "lat": 35.637159},
+        {"name": "Gakugei-Daigaku", "lng": 139.6830583, "lat": 35.628743},
+        {"name": "Toritsu-Daigaku", "lng": 139.6742263, "lat": 35.6178274},
+        {"name": "Jiyugaoka", "lng": 139.6657348, "lat": 35.6074068},
+        {"name": "Denen-Chohu", "lng": 139.6673414, "lat": 35.5968484},
+        {"name": "Tamagawa", "lng": 139.6665893, "lat": 35.589497},
+        {"name": "Shin-Maruko", "lng": 139.6597419, "lat": 35.5805941},
+        {"name": "Musashikosugi", "lng": 139.657272, "lat": 35.5766378},
+        {"name": "Motosumiyoshi", "lng": 139.6518508, "lat": 35.5643213},
+        {"name": "Hiyoshi", "lng": 139.6447741, "lat": 35.5533679},
+        {"name": "Tsunashima", "lng": 139.6317643, "lat": 35.5385099},
+        {"name": "Okurayama", "lng": 139.627669, "lat": 35.5218361},
+        {"name": "Kikuna", "lng": 139.6290969, "lat": 35.5104958},
+        {"name": "Myorenji", "lng": 139.6310963, "lat": 35.498784},
+        {"name": "Hakuraku", "lng": 139.62757735755036, "lat": 35.48944932268096},
+        {"name": "Higashi-Hakuraku", "lng": 139.6272808, "lat": 35.4832623},
+        {"name": "Tanmachi", "lng": 139.6254683, "lat": 35.474850177},
+        {"name": "Yokohama", "lng": 139.6201192, "lat": 35.4657901},
+      ]
+
       const stations_chuo_soubu = [
         {"name": "Chiba", "lng": 140.1112894, "lat": 35.6129259},
         {"name": "Nishi-Chiba", "lng": 140.1011063, "lat": 35.622644},
@@ -385,6 +409,8 @@
         plotStations(projection, stations_2);
         plotRailPath(projection, stations_keihin, "cyan");
         plotRailPath(projection, stations_chuo_soubu, "orange");
+        plotRailPath(projection, stations_tokyu_toyoko, "tomato");
+
       });
 
       function zoomed() {
