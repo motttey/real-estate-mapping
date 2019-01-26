@@ -166,6 +166,29 @@
         {"id": 130, "name": "Shin-Koshigaya", "lng": 139.789783, "lat": 35.8756114},
       ]
 
+      const stations_tx = [
+        {"name": "Akihabara", "lng": 139.7709203, "lat": 35.6983573},
+        {"name": "Shin-Okachimachi", "lng": 139.7797589, "lat": 35.7070621},
+        {"name": "Asakusa", "lng": 139.7955734, "lat": 35.7107924},
+        {"name": "Minamisenju", "lng": 139.7969326, "lat": 35.733259},
+        {"name": "Kitasenju", "lng": 139.8031493, "lat": 35.7496806},
+        {"name": "Aoi", "lng": 139.8181803, "lat": 35.772564},
+        {"name": "Rokucho", "lng": 139.8194438, "lat": 35.7848987},
+        {"name": "Yashio", "lng": 139.8426375, "lat": 35.8078355},
+        {"name": "Misato-Chuo", "lng": 139.8761871, "lat": 35.8245869},
+        {"name": "Minaminagareyama", "lng": 139.9020593, "lat": 35.837809},
+        {"name": "Nagareyama-Central-Park", "lng": 139.9129463, "lat": 35.854418},
+        {"name": "Nagareyama-Otakanomori", "lng": 139.9228539, "lat": 35.8718111},
+        {"name": "Kashiwanoha-Campus", "lng": 139.9503439, "lat": 35.8936788},
+        {"name": "Kashiwa-Tanaka", "lng": 139.9552973, "lat": 35.910947},
+        {"name": "Moriya", "lng": 139.9900742, "lat": 35.9507748},
+        {"name": "Mirai-Daira", "lng": 140.0361243, "lat": 35.994711},
+        {"name": "Midorino", "lng": 140.054064, "lat": 36.0299213},
+        {"name": "Bampaku-Kinenkoen", "lng": 140.0572313, "lat": 36.058427},
+        {"name": "Kenkyu-Gakuen", "lng": 140.0801813, "lat": 36.082114},
+        {"name": "Tsukuba", "lng": 140.1117097, "lat": 36.0825102},
+      ]
+
       const stations_tokyu_toyoko = [
         {"name": "Shibuya", "lng": 139.6994471, "lat": 35.6580382},
         {"name": "Daikanyama", "lng": 139.7009593, "lat": 35.6480919},
@@ -410,7 +433,7 @@
         plotRailPath(projection, stations_keihin, "cyan");
         plotRailPath(projection, stations_chuo_soubu, "orange");
         plotRailPath(projection, stations_tokyu_toyoko, "tomato");
-
+        plotRailPath(projection, stations_tx, "mediumblue");
       });
 
       function zoomed() {
