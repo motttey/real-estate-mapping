@@ -377,6 +377,15 @@
         {"name": "Ofuna", "lng": 139.5291102, "lat": 35.3540475},
       ];
 
+      const train_rails = [
+        {"name": "Yamanote", "stations": stations_yamanote, "color": "lime"},
+        {"name": "Keihin-Tohoku", "stations": stations_keihin, "color": "cyan"},
+        {"name": "Chuo-Soubu", "stations": stations_chuo_soubu, "color": "orange"},
+        {"name": "Tokyu-Toyoko", "stations": stations_tokyu_toyoko, "color": "tomato"},
+        {"name": "Tokyu-DenenToshi", "stations": stations_denen_toshi, "color": "seagreen"},
+        {"name": "Tsukuba_Express", "stations": stations_tx, "color": "mediumblue"},
+      ];
+
       const width = 1500;
       const height = 1500;
 
@@ -393,36 +402,36 @@
       // ボタンなどのUIと関連付けて表示/非表示できるようにする
       const visible_towns = [0,1,2,3,4,5,6,7,8,9,10,11,12];
 
-      var svg = d3.select("#map")
+      let svg = d3.select("#map")
         .attr("width", width)
         .attr("height", height)
         .style("background-color", "black");
 
-      var plots_svg = d3.select("#plot")
+      let plots_svg = d3.select("#plot")
         .attr("width", width)
         .attr("height", height)
         .call(zoom);
 
-      var hulls_svg = d3.select("#hull")
+      let hulls_svg = d3.select("#hull")
         .attr("width", width)
         .attr("height", height);
 
-      var anotation_svg = d3.select("#anotation")
+      let anotation_svg = d3.select("#anotation")
         .attr("width", width)
         .attr("height", height);
 
-      var labels_svg = d3.select("#labels")
+      let labels_svg = d3.select("#labels")
         .attr("width", width)
         .attr("height", height);
 
-      var tooltip = d3.select("#main")
+      let tooltip = d3.select("#main")
           .append("div")
           .attr("id", "tooltip")
           .style("position", "absolute")
           .style("visibility", "hidden")
           .text("tooltip");
 
-      var projection = d3.geoMercator()
+      let projection = d3.geoMercator()
           .center([ 139.70, 35.64 ])
           .translate([width/2, height/2])
           .scale(54000);
@@ -453,6 +462,10 @@
         .text("Price")
         .style("fill", "white");
 
+      labels_svg.append("g")
+        .attr("class", "legendRails")
+        .attr("transform", "translate(40, 140)");
+
       let rankLegend = d3.legendColor()
         .shapeWidth(50)
         .cells([0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130])
@@ -467,14 +480,27 @@
         .labelFormat(d3.format('d'))
         .scale(linearColPrice);
 
+      let railScale = d3.scaleOrdinal()
+  	    .domain(train_rails.map((val, i) =>
+  				val["name"]
+  			))
+    	  .range(train_rails.map((val, i) =>
+  				val["color"]
+  			));
+
+      let legendRails = d3.legendColor()
+      	.scale(railScale);
+
       labels_svg.select(".legendRank")
-        .call(rankLegend)
-        .selectAll("text.label")
-          .style("fill", "white");
+        .call(rankLegend);
 
       labels_svg.select(".legendPrice")
-        .call(rankPrice)
-        .selectAll("text.label")
+        .call(rankPrice);
+
+      labels_svg.select(".legendRails")
+  	  	.call(legendRails);
+
+      labels_svg.selectAll("text.label")
           .style("fill", "white");
 
       const red_gray_grad = d3.interpolate("crimson", "darkgray");
@@ -491,13 +517,9 @@
       ).done(function(){
         plotStations(projection, stations);
         plotStations(projection, stations_2);
-        plotRailPath(projection, stations_keihin, "cyan");
-        plotRailPath(projection, stations_chuo_soubu, "orange");
-        plotRailPath(projection, stations_tokyu_toyoko, "tomato");
-        plotRailPath(projection, stations_tx, "mediumblue");
-        plotRailPath(projection, stations_denen_toshi, "seagreen");
-        plotRailPath(projection, stations_yamanote, "lime");
-
+        train_rails.forEach(function(d){
+          plotRailPath(projection, d["stations"], d["color"]);
+        });
       });
 
       function zoomed() {
