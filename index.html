@@ -323,9 +323,13 @@
       const kilometor = projection([0.0090133729745762, 0])[0] - projection([0, 0])[0];
       console.log(kilometor);
 
-      var linearColRank = d3.scaleLinear()
+      let linearColRank = d3.scaleLinear()
         .domain([0, city_max])
         .range(["crimson", "mediumseagreen"]);
+
+      let linearColPrice = d3.scaleLinear()
+        .domain([0, 1000000])
+        .range(["black", "dodgerblue"]);
 
       labels_svg.append("g")
         .attr("class", "legendRank")
@@ -334,15 +338,34 @@
         .text("City Rank")
         .style("fill", "white");
 
-      var rankLegend = d3.legendColor()
-        .shapeWidth(40)
+      labels_svg.append("g")
+        .attr("class", "legendPrice")
+        .attr("transform", "translate(50,80)")
+        .append("text")
+        .text("Price")
+        .style("fill", "white");
+
+      let rankLegend = d3.legendColor()
+        .shapeWidth(50)
         .cells([0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130])
         .orient('horizontal')
         .labelFormat(d3.format('d'))
         .scale(linearColRank);
 
+      let rankPrice = d3.legendColor()
+        .shapeWidth(89)
+        .cells([0, 250000, 500000, 750000, 1000000, 1250000, 1500000, 1750000])
+        .orient('horizontal')
+        .labelFormat(d3.format('d'))
+        .scale(linearColPrice);
+
       labels_svg.select(".legendRank")
         .call(rankLegend)
+        .selectAll("text.label")
+          .style("fill", "white");
+
+      labels_svg.select(".legendPrice")
+        .call(rankPrice)
         .selectAll("text.label")
           .style("fill", "white");
 
