@@ -10,7 +10,7 @@ function plotAllEstate(projection){
 
   // 下位をマッピング
   const min_index = city_length + 1;
-  const lowest_num = 131;
+  const lowest_num = city_max + 1;
   for (var i = min_index; i < lowest_num; i++) {
       let id = ('000' + i).slice(-3);
       if (i!== 104 && i!== 117 && i!== 91 && i!== 75) {

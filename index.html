@@ -6,19 +6,25 @@
   </head>
   <body>
     <div id="main">
-      <div id="map_div" style="position:fixed;">
-        <svg id="map"> </svg>
+      <div id="plots">
+        <div id="map_div" style="position:fixed;">
+          <svg id="map"> </svg>
+        </div>
+        <div id="hull_div" style="position:fixed;">
+          <svg id="hull"> </svg>
+        </div>
+        <div id="plot_div" style="position:fixed;">
+          <svg id="plot"> </svg>
+        </div>
+        <div id="anotation_div" style="position:fixed; pointer-events: none;">
+          <svg id="anotation"> </svg>
+        </div>
       </div>
-      <div id="hull_div" style="position:fixed;">
-        <svg id="hull"> </svg>
-      </div>
-      <div id="plot_div" style="position:fixed;">
-        <svg id="plot"> </svg>
-      </div>
-      <div id="anotation_div" style="position:fixed; pointer-events: none;">
-        <svg id="anotation"> </svg>
+      <div id="labels_div" style="position:fixed; pointer-events: none;">
+        <svg id="labels"></svg>
       </div>
     </div>
+
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
@@ -277,7 +283,7 @@
        .on("zoom", zoomed);
 
       // ボタンなどのUIと関連付けて表示/非表示できるようにする
-      var visible_towns = [0,1,2,3,4,5,6,7,8,9,10,11,12];
+      const visible_towns = [0,1,2,3,4,5,6,7,8,9,10,11,12];
 
       var svg = d3.select("#map")
         .attr("width", width)
@@ -297,6 +303,10 @@
         .attr("width", width)
         .attr("height", height);
 
+      var labels_svg = d3.select("#labels")
+        .attr("width", width)
+        .attr("height", height);
+
       var tooltip = d3.select("#main")
           .append("div")
           .attr("id", "tooltip")
@@ -310,26 +320,31 @@
           .scale(54000);
 
       // https://easyramble.com/latitude-and-longitude-per-kilometer.html
-      var kilometor = projection([0.0090133729745762, 0])[0] - projection([0, 0])[0];
+      const kilometor = projection([0.0090133729745762, 0])[0] - projection([0, 0])[0];
       console.log(kilometor);
 
-
-      var linearCol = d3.scaleLinear()
+      var linearColRank = d3.scaleLinear()
         .domain([0, city_max])
         .range(["crimson", "mediumseagreen"]);
 
-      anotation_svg.append("g")
-        .attr("class", "legendLinear")
-        .attr("transform", "translate(20,20)");
+      labels_svg.append("g")
+        .attr("class", "legendRank")
+        .attr("transform", "translate(50,20)")
+        .append("text")
+        .text("City Rank")
+        .style("fill", "white");
 
-      var legendLinear = d3.legendColor()
-        .shapeWidth(30)
+      var rankLegend = d3.legendColor()
+        .shapeWidth(40)
         .cells([0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130])
         .orient('horizontal')
-        .scale(linearCol);
+        .labelFormat(d3.format('d'))
+        .scale(linearColRank);
 
-      anotation_svg.select(".legendLinear")
-        .call(legendLinear);
+      labels_svg.select(".legendRank")
+        .call(rankLegend)
+        .selectAll("text.label")
+          .style("fill", "white");
 
       const red_gray_grad = d3.interpolate("crimson", "darkgray");
       const green_gray_grad = d3.interpolate("mediumseagreen", "darkgray");
@@ -350,7 +365,7 @@
       });
 
       function zoomed() {
-        d3.selectAll("g").attr("transform", d3.event.transform);
+        d3.select("#plots").selectAll("g").attr("transform", d3.event.transform);
       }
 
     </script>
