@@ -262,6 +262,9 @@ function plotCoordinates(projection, filename, id, color) {
             .text(coordinates[i]["name"])
             .style("color", "aquamarine")
             .style("background-color", "dimgray");
+
+          d3.select("#city_name").html(target_station["name"]);
+          d3.select("#estate_num").html(projected_coordinate.length);
         });
   });
 

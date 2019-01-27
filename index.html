@@ -20,8 +20,13 @@
           <svg id="anotation"> </svg>
         </div>
       </div>
+
       <div id="labels_div" style="position:fixed; pointer-events: none;">
         <svg id="labels"></svg>
+      </div>
+      <div id="details" style="position:fixed; text-align: right; left: 1200px;">
+        <h1 id="city_name" style="color: white;">City Name</h1>
+        <h3 id="estate_num" style="color: white;">Num</h3>
       </div>
     </div>
 
@@ -424,6 +429,10 @@
         .attr("width", width)
         .attr("height", height);
 
+      let details_div = d3.select("#details")
+        .attr("width", width)
+        .attr("height", height);
+
       let tooltip = d3.select("#main")
           .append("div")
           .attr("id", "tooltip")
@@ -450,14 +459,14 @@
 
       labels_svg.append("g")
         .attr("class", "legendRank")
-        .attr("transform", "translate(50,20)")
+        .attr("transform", "translate(50, 20)")
         .append("text")
         .text("City Rank")
         .style("fill", "white");
 
       labels_svg.append("g")
         .attr("class", "legendPrice")
-        .attr("transform", "translate(50,80)")
+        .attr("transform", "translate(50, 80)")
         .append("text")
         .text("Price")
         .style("fill", "white");
