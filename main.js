@@ -180,11 +180,12 @@ function plotCoordinates(projection, filename, id, color) {
     let polygon_area = calcPolygonArea(polygon);
     let polygon_centroid = d3.polygonCentroid(polygon);
 
+    const kilometer_trans = 1/0.0090133729745762;
     console.log(coordinates[0]["name"]);
     console.log(projected_coordinate.length, polygon_area);
     console.log("total_distance", total_distance);
-    console.log("average_distance", (total_distance/projected_coordinate.length) * (1/0.0090133729745762));
-    console.log("distance_from_tokyo", distance_from_tokyo * (1/0.0090133729745762));
+    console.log("average_distance", (total_distance/projected_coordinate.length) * kilometer_trans);
+    console.log("distance_from_tokyo", distance_from_tokyo * kilometer_trans);
 
     let hull = hull_g.append("path");
 
@@ -264,7 +265,10 @@ function plotCoordinates(projection, filename, id, color) {
             .style("background-color", "dimgray");
 
           d3.select("#city_name").html(target_station["name"]);
-          d3.select("#estate_num").html(projected_coordinate.length);
+          d3.select("#estate_num").html("Num: " + projected_coordinate.length);
+          d3.select("#estate_sparse").html("Estate Sparse: " +(polygon_area/projected_coordinate.length).toFixed(2));
+          d3.select("#average_distance").html("Average Distance: " + (total_distance/projected_coordinate.length * kilometer_trans).toFixed(2) + "[km]");
+          d3.select("#distance_from_tokyo").html("From Tokyo: " + (distance_from_tokyo * kilometer_trans).toFixed(2) + "[km]");    
         });
   });
 
