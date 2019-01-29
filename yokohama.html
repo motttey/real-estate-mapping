@@ -102,7 +102,7 @@
 
       $.when(
         plotPrefecture(14, projection, 400000),
-        plotCoordinates(projection, "output000.json", 0, red_gray_grad(0)),
+        plotCoordinates(projection, "./json/output000.json", 0, red_gray_grad(0)),
       ).done(function(){
         plotStations(projection, stations);
       });

@@ -14,7 +14,7 @@ function plotAllEstate(projection){
   for (var i = min_index; i < lowest_num; i++) {
       let id = ('000' + i).slice(-3);
       if (i!== 104 && i!== 117 && i!== 91 && i!== 75) {
-        plotCoordinates(projection, "output"+id+".json", i, green_gray_grad( (lowest_num - i) / (lowest_num - min_index) ));
+        plotCoordinates(projection, "./json/output"+id+".json", i, green_gray_grad( (lowest_num - i) / (lowest_num - min_index) ));
       }
   }
 
@@ -30,7 +30,7 @@ function plotPrefecture(id, projection, price_max){
       let price_data;
 
       // JSONにしてオブジェクト単位で取れるようにする
-      d3.json("price.json").then(function(p_data){
+      d3.json("./json/price.json").then(function(p_data){
          price_data = p_data;
 
          let map = prefecture_group.selectAll("path")
@@ -268,7 +268,7 @@ function plotCoordinates(projection, filename, id, color) {
           d3.select("#estate_num").html("Num: " + projected_coordinate.length);
           d3.select("#estate_sparse").html("Estate Sparse: " +(polygon_area/projected_coordinate.length).toFixed(2));
           d3.select("#average_distance").html("Average Distance: " + (total_distance/projected_coordinate.length * kilometer_trans).toFixed(2) + "[km]");
-          d3.select("#distance_from_tokyo").html("From Tokyo: " + (distance_from_tokyo * kilometer_trans).toFixed(2) + "[km]");    
+          d3.select("#distance_from_tokyo").html("From Tokyo: " + (distance_from_tokyo * kilometer_trans).toFixed(2) + "[km]");
         });
   });
 

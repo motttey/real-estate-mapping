@@ -42,7 +42,7 @@
       let bar_g1_3 = createSVG("1_3");
       let bar_g1_4 = createSVG("1_4");
 
-      d3.csv("bukken_sparse3.csv")
+      d3.csv("./csv/bukken_sparse3.csv")
       .then(function(data) {
           console.log(data);
           showBarchart(bar_g1_1, data, "num");

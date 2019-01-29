@@ -105,3 +105,7 @@ venv.bak/
 
 # json
 *.json
+
+# json, csv dir
+json/
+csv/

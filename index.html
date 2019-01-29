@@ -24,7 +24,7 @@
       <div id="labels_div" style="position:fixed; pointer-events: none;">
         <svg id="labels"></svg>
       </div>
-      <div id="details" style="position:fixed; text-align: right; left: 1200px;">
+      <div id="details" style="position:fixed; text-align: right; left: 1650px; ">
         <h1 id="city_name" style="color: white;">City Name</h1>
         <h3 id="estate_num" style="color: white;">Num: </h3>
         <h3 id="estate_sparse" style="color: white;">Estate Sparse: </h3>
@@ -394,8 +394,8 @@
         {"name": "Tsukuba_Express", "stations": stations_tx, "color": "mediumblue"},
       ];
 
-      const width = 1500;
-      const height = 1500;
+      const width = 2250;
+      const height = 2000;
 
       const city_length = 69;
       const city_max = 130;
@@ -444,9 +444,9 @@
           .text("tooltip");
 
       let projection = d3.geoMercator()
-          .center([ 139.70, 35.64 ])
+          .center([ 139.765, 35.681 ])
           .translate([width/2, height/2])
-          .scale(54000);
+          .scale(60000);
 
       // https://easyramble.com/latitude-and-longitude-per-kilometer.html
       const kilometor = projection([0.0090133729745762, 0])[0] - projection([0, 0])[0];
