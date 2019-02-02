@@ -17,7 +17,6 @@ function plotAllEstate(projection){
         plotCoordinates(projection, "./json/output"+id+".json", i, green_gray_grad( (lowest_num - i) / (lowest_num - min_index) ));
       }
   }
-
 }
 
 function plotPrefecture(id, projection, price_max){

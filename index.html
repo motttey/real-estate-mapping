@@ -1,35 +1,58 @@
 <!DOCTYPE html>
 <html lang="ja">
   <head>
+    <style>
+      body {
+        background-color: black;
+      }
+      #plots div {
+        position:fixed;
+      }
+      #anotation_div {
+        pointer-events: none;
+      }
+      #labels_div {
+        position:fixed;
+        pointer-events: none;
+      }
+      #details {
+        position:fixed;
+        text-align: right;
+        left: 1650px;
+      }
+      h1, h3 {
+        color: white;
+      }
+    </style>
     <meta charset="utf-8"/>
     <title>Town map</title>
   </head>
   <body>
     <div id="main">
       <div id="plots">
-        <div id="map_div" style="position:fixed;">
+        <div id="map_div">
           <svg id="map"> </svg>
         </div>
-        <div id="hull_div" style="position:fixed;">
+        <div id="hull_div">
           <svg id="hull"> </svg>
         </div>
-        <div id="plot_div" style="position:fixed;">
+        <div id="plot_div">
           <svg id="plot"> </svg>
         </div>
-        <div id="anotation_div" style="position:fixed; pointer-events: none;">
+        <div id="anotation_div">
           <svg id="anotation"> </svg>
         </div>
       </div>
 
-      <div id="labels_div" style="position:fixed; pointer-events: none;">
+      <div id="labels_div">
         <svg id="labels"></svg>
       </div>
-      <div id="details" style="position:fixed; text-align: right; left: 1650px; ">
-        <h1 id="city_name" style="color: white;">City Name</h1>
-        <h3 id="estate_num" style="color: white;">Num: </h3>
-        <h3 id="estate_sparse" style="color: white;">Estate Sparse: </h3>
-        <h3 id="average_distance" style="color: white;">Average Distance: </h3>
-        <h3 id="distance_from_tokyo" style="color: white;">From Tokyo: </h3>
+      <div id="details">
+        <h1 id="city_name">City Name</h1>
+        <h3 id="estate_num">Num: </h3>
+        <h3 id="estate_sparse">Estate Sparse: </h3>
+        <h3 id="average_distance">Average Distance: </h3>
+        <h3 id="distance_from_tokyo">From Tokyo: </h3>
       </div>
     </div>
 
@@ -395,7 +418,7 @@
       ];
 
       const width = 2250;
-      const height = 2000;
+      const height = 2250;
 
       const city_length = 69;
       const city_max = 130;
@@ -412,8 +435,7 @@
 
       let svg = d3.select("#map")
         .attr("width", width)
-        .attr("height", height)
-        .style("background-color", "black");
+        .attr("height", height);
 
       let plots_svg = d3.select("#plot")
         .attr("width", width)
