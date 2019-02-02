@@ -11,7 +11,7 @@ def show_corr_heatmap(df):
     plt.show()
 
 if __name__ == '__main__':
-    df = pd.read_csv('bukken_sparse3.csv')
+    df = pd.read_csv('./csv/bukken_sparse3.csv')
 
     df_city = df[df["type"]==0]
     df_stations = df[df["type"]==1]

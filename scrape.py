@@ -29,7 +29,7 @@ def scrape_towns():
 
 def get_real_estate_list(town_name_list):
     all_estate_name_list = {}
-    init_page = 1
+    init_page = 0
     for town_name in town_name_list:
         response = urllib.request.urlopen("https://www.sumai-surfin.com/search/result/?p="+str(init_page)+"&keyword="+urllib.request.quote(town_name.encode('utf-8')))
         # req.add_header('User-Agent', User_Agent)
@@ -51,7 +51,6 @@ def get_real_estate_list(town_name_list):
             estate_list = soup_inner.find_all('div', {'class' :'p-section__ttl-line'})
             for estate in estate_list:
                 estate_name = estate.find('div').find('a').text
-
                 # 物件名に地名が含まれるものに限定
                 if town_name in estate_name:
                     estate_name_list.append(estate_name)
@@ -59,7 +58,7 @@ def get_real_estate_list(town_name_list):
     return all_estate_name_list
 
 def get_geocode_from_estate_name(all_estate_name_list, conn):
-    key_id = 58
+    key_id = 42
     # keyの再検討
     for key, estate_name_list in all_estate_name_list.items():
         key_id_str = str('{0:03d}'.format(key_id));
@@ -117,6 +116,7 @@ if __name__ == '__main__':
     print(connected)
 
     # popular_town_array = scrape_towns()
+    popular_town_array = ["和光市"]
     # 東京は除外
     # popular_town_array = ["横浜", "恵比寿", "吉祥寺", "品川", "池袋", "武蔵小杉", "新宿", "目黒", "大宮", "浦和",
     #                      "渋谷", "中目黒", "自由が丘", "鎌倉", "中野", "二子玉川", "船橋", "赤羽"]
@@ -125,7 +125,7 @@ if __name__ == '__main__':
     #                    , "稲毛", "後楽園", "京急川崎", "国立", "田園調布", "笹塚", "関内", "学芸大学", "青葉台", "月島", "石神井公園", "高田馬場", "溝の口"
     #                    , "上尾", "越谷レイクタウン", "ふじみ野", "新越谷"]
 
-    popular_town_array = ["辻堂", "大船", "本八幡", "練馬", "市川", "大崎", "目白", "上大岡", "大井町", "代官山", "守谷"]
+    # popular_town_array = ["辻堂", "大船", "本八幡", "練馬", "市川", "大崎", "目白", "上大岡", "大井町", "代官山", "守谷"]
 
     #popular_town_array = ["清澄白河", "駒込", "六本木"
     #                     , "阿佐ヶ谷", "橋本", "武蔵浦和", "錦糸町", "茅ヶ崎", "茗荷谷", "麻布十番", "海浜幕張", "西荻窪", "神楽坂"

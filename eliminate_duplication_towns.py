@@ -33,7 +33,7 @@ def  get_new_estate_name_list(conn, town_id, eliminate_str):
     finally:
         cursor.close()
 
-    f = codecs.open("output"+str(town_id)+"_new.json", "w", "utf-8")
+    f = codecs.open("output"+str('{0:03d}'.format(town_id))+"_new.json", "w", "utf-8")
     json.dump(estate_detail_list, f, ensure_ascii=False)
     return 0;
 

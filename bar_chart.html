@@ -54,7 +54,7 @@
       let bar_g2_3 = createSVG("2_3");
       let bar_g2_4 = createSVG("2_4");
 
-      d3.csv("bukken_sparse.csv")
+      d3.csv("./csv/bukken_sparse.csv")
       .then(function(data) {
           console.log(data);
           showBarchart(bar_g1_1, data, "num");
@@ -63,7 +63,7 @@
           showBarchart(bar_g1_4, data, "distance");
       });
 
-      d3.csv("bukken_sparse2.csv")
+      d3.csv("./csv/bukken_sparse2.csv")
       .then(function(data) {
           console.log(data);
           showBarchart(bar_g2_1, data, "num");
