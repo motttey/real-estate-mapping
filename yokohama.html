@@ -2,23 +2,33 @@
 <html lang="ja">
   <head>
     <meta charset="utf-8"/>
+    <style>
+      #main div {
+        position:fixed;
+      }
+      #anotation_div {
+        pointer-events: none;
+      }
+    </style>
     <title>Yokohama Town map</title>
   </head>
   <body>
     <div id="main">
-      <div id="map_div" style="position:fixed;">
+      <div id="map_div">
         <svg id="map"> </svg>
       </div>
-      <div id="hull_div" style="position:fixed;">
+      <div id="hull_div">
         <svg id="hull"> </svg>
       </div>
-      <div id="plot_div" style="position:fixed;">
+      <div id="plot_div">
         <svg id="plot"> </svg>
       </div>
-      <div id="anotation_div" style="position:fixed; pointer-events: none;">
+      <div id="anotation_div">
         <svg id="anotation"> </svg>
       </div>
-      <input type="button" id="yokohama_button" value="Yokohama" style="top: 1500px;">
+      <!--
+        <input type="button" id="yokohama_button" value="Yokohama" style="top: 1500px;">
+      -->
     </div>
 
     <script src="https://d3js.org/d3.v5.min.js"></script>
@@ -52,10 +62,10 @@
         {"name": "Toka-ichiba", "lng": 139.526222, "lat": 35.51654299999998},
       ];
 
-      const width = 1500;
-      const height = 1500;
+      const width = 1000;
+      const height = 1000;
 
-      var city_length = stations.length;
+      const city_length = stations.length;
 
       const zoom = d3.zoom()
        .scaleExtent([1, 40])
@@ -63,36 +73,35 @@
        .extent([[0, 0], [width, height]])
        .on("zoom", zoomed);
 
-      var svg = d3.select("#map")
+      let svg = d3.select("#map")
         .attr("width", width)
         .attr("height", height)
         .style("background-color", "black");
 
-
-      var plots_svg = d3.select("#plot")
+      let plots_svg = d3.select("#plot")
         .attr("width", width)
         .attr("height", height)
         .call(zoom);
 
-      var hulls_svg = d3.select("#hull")
+      let hulls_svg = d3.select("#hull")
         .attr("width", width)
         .attr("height", height);
 
-      var anotation_svg = d3.select("#anotation")
+      let anotation_svg = d3.select("#anotation")
         .attr("width", width)
         .attr("height", height);
 
-      var tooltip = d3.select("#main")
+      let tooltip = d3.select("#main")
           .append("div")
           .attr("id", "tooltip")
           .style("position", "absolute")
           .style("visibility", "hidden")
           .text("tooltip");
 
-      var projection = d3.geoMercator()
-          .center([ 139.62, 35.5 ])
+      let projection = d3.geoMercator()
+          .center([ 139.7, 35.466 ])
           .translate([width/2, height/2])
-          .scale(96000);
+          .scale(84000);
 
       // https://easyramble.com/latitude-and-longitude-per-kilometer.html
       const kilometor = projection([0.0090133729745762, 0])[0] - projection([0, 0])[0];
@@ -101,8 +110,9 @@
       const while_blue_grad = d3.interpolate("black", "dodgerblue");
 
       $.when(
-        plotPrefecture(14, projection, 400000),
+        plotPrefecture(14, projection, 300000),
         plotCoordinates(projection, "./json/output000.json", 0, red_gray_grad(0)),
+        plotCoordinates(projection, "./json/output999.json", 0, "green"),
       ).done(function(){
         plotStations(projection, stations);
       });
@@ -124,7 +134,6 @@
           })
         })
       }
-
 
     </script>
   </body>
