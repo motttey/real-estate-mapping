@@ -115,6 +115,7 @@
         plotCoordinates(projection, "./json/output999.json", 0, "green"),
       ).done(function(){
         plotStations(projection, stations);
+        highlightYokohama();
       });
 
       function zoomed() {
@@ -128,10 +129,7 @@
 
       function highlightYokohama() {
         d3.select("g").selectAll("path").each(function(d,i){
-          d3.select(this).style("stroke", function(){
-            if ( parseInt(d.id) > 14101 && parseInt(d.id) <= 14118) return "red";
-            else return "none";
-          })
+          if ( parseInt(d.id) >= 14101 && parseInt(d.id) <= 14118) d3.select(this).style("stroke", "red");
         })
       }
 
