@@ -109,3 +109,10 @@ venv.bak/
 # json, csv dir
 json/
 csv/
+exept.txt
+
+# firebase
+public/
+storage.rules
+.firebase/
+.firebaserc
